@@ -1,5 +1,5 @@
 // File name: mytoolkit.js
-//import { SVG } from './svg.min.js'
+import { SVG } from './svg.min.js'
 
 var MyToolkit = (function() {
     var Button = function(){
@@ -29,8 +29,24 @@ var MyToolkit = (function() {
                 clickEvent = eventHandler
             }
         }
-    }
+    }//Button
+        
 return {Button}
-}());
+
+// //in progress
+// var CheckBox = function(){
+//     var draw = SVG().addTo('body').size('100%','100%');
+//     var box = draw.rect(100,50).fill('blue')
+
+//     return {
+//         move: function(x, y) {
+//             rect.move(x, y);
+//         }
+//     }
+// }//CheckBox
+// return {CheckBox}
+
+
+}()); //end of tool kit
 
 export{MyToolkit}
