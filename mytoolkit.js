@@ -183,38 +183,41 @@ var CheckBox = function(){
 
     //creating a group object for checkbox
     var checkBoxGroup = draw.group();  
-    var rect = checkBoxGroup.rect(25,25).fill('none').radius(5);
-    rect.attr({"padding": "10"})
+    var rect = checkBoxGroup.rect(25,25).fill('white').radius(5);
+    rect.attr({padding: '50px 50px'})
     var stroke = checkBoxGroup.stroke({color: 'gray', width: 2});
-
     //adding checkmark design
     var checkMarkGroup = draw.group();
     var downLine = checkMarkGroup.line(0,0,5,5).move(10,20);
-    downLine.stroke({ color: '#f06', width: 5, linecap: 'round',padding:'5'})
+    downLine.stroke({ color: '#f06', width: 5, linecap: 'round',padding:'20px 20px'})
     var upLine = checkMarkGroup.line(10,-10,0,0).move(15,15);
-    upLine.stroke({ color: '#f06', width: 5, linecap: 'round' })
-    checkMarkGroup.attr({padding:'25px 25px'})
-
+    upLine.stroke({ color: '#f06', width: 5, linecap: 'round', padding:'10px 10px' })
+    checkMarkGroup.attr({padding:'50px 50px'})
     checkMarkGroup.addTo(checkBoxGroup);
     checkMarkGroup.move(5,10);
     checkMarkGroup.hide();
 
     //add text button
-    //checkBoxGroup.text("Click Here").fill('white').attr({"font-size": '20'}).x(5).y(10);
-    // var text = checkBoxGroup.text("Button:").fill('white').attr({"font-size": '20'})
-    // .cx(90).cy(25);
-    // text.addTo(checkBoxGroup);
+    var text = checkBoxGroup.text("Text").fill('#f06').attr({"font-size": '20'}).x(30).y(5);
+    text.stroke({color: '#f06', width: 1});
+    text.addTo(checkBoxGroup);
+
+
+    //PROCESSING BEGINS
 
     //Expose an event handler that notifies consuming code when the widget state has changed.
     var clickEvent = null
+    var isChecked = false;
 
     //(A) visually change for at least three states 
     //(D) Expose an event handler that notifies consuming code when the widget state has changed.
     rect.mouseover(function(){
         this.fill({ color: 'white'})
+        // checkMarkGroup.show();
     })
     rect.mouseout(function(){
         this.fill({ color: 'none'})
+        // checkMarkGroup.hide();
     })
     rect.mouseup(function(){
         this.fill({ color: 'white'})
@@ -227,28 +230,32 @@ var CheckBox = function(){
         if(clickEvent != null){
             clickEvent(event)
         }
-        if(checkMarkGroup.visible())
+        if(checkMarkGroup.visible()){
             checkMarkGroup.hide();
+            isChecked = false;
+        }
         else{
             checkMarkGroup.show();
+            isChecked = true;
+
         }
 
         console.log("checkbox clicked");
     })
-    checkMarkGroup.click(function(event){
-        // this.fill({ color: 'black'})
+    // checkMarkGroup.click(function(event){
+    //     // this.fill({ color: 'black'})
         
-        if(clickEvent != null){
-            clickEvent(event)
-        }
-        if(checkMarkGroup.visible())
-            checkMarkGroup.hide();
-        else{
-            checkMarkGroup.show();
-        }
+    //     if(clickEvent != null){
+    //         clickEvent(event)
+    //     }
+    //     if(checkMarkGroup.visible())
+    //         checkMarkGroup.hide();
+    //     else{
+    //         checkMarkGroup.show();
+    //     }
 
-        console.log("checkbox clicked");
-    })
+    //     console.log("checkbox clicked");
+    // })
 
 
     //on intantiation, these fire off.
@@ -291,7 +298,26 @@ var CheckBox = function(){
     }
 }//Button
 
-return {Button,CheckBox}
+var ProgressBar = function(){
+    /*     
+        Create progress bar components
+            -rect with border radius
+            -fill(width given)
+    */
+
+    //creating SVG space
+    var draw = SVG.addTo('body').size('100%, 100%').move(20,20);
+
+    //creating progress bar grouping
+    progressBarGroup = draw.group();
+
+        //rectangle
+        var rect = progressBarGroup.rect(100,30).stroke('black')
+        .attr({"border-radius":"5px"});
+
+
+}
+return {Button,CheckBox,ProgressBar}
 }()); //end of tool kit
 
 export{MyToolkit}

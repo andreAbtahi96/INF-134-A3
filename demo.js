@@ -21,12 +21,15 @@ btn.onclick(function(e){
 // Implement a MyToolkit Checkbx
 var checkBox = new MyToolkit.CheckBox; //init checkbox
 checkBox.setId("checkbox1");	//set id
-//checkBox.text("add text");	//set text on 
+checkBox.text("isActive");	//set text on 
 checkBox.move(10,5);
 checkBox.onclick(function(e){
 	console.log(e);
-});
+})
 // checkBox.onclick(function(e){
 // 	console.log(e);
 // });
+
+var progressBar = new MyToolkit.ProgressBar;
+progressBar.move(20,20)
 
