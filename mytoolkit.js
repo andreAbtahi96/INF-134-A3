@@ -171,7 +171,7 @@ TODO:
     -expose event handler that notifies cosuming code when checked state has changed.
     -Expose an event handler that notifies consuming code when the widget state has changed
 */
-var CheckBox = function(){
+    var CheckBox = function(){
 
     var xDimmension = 200;
     var yDimmension = 50;
@@ -296,27 +296,68 @@ var CheckBox = function(){
             rect.attr("id", id);
         }
     }
-}//Button
+    }//Button
 
-var ProgressBar = function(){
+    var ProgressBar = function(){
     /*     
-        Create progress bar components
-            -rect with border radius
-            -fill(width given)
+        
+        Expose a custom property to set the width of the progress bar. 
+
+        Expose a custom property to set the increment value of the progress bar.
+
+        Expose a custom property to get the increment value of the progress bar.
+
+        Expose a custom method to increment the value of the progress bar. The method should support an arbitrary numerical value from 0-100.
+
+        Expose an event handler that notifies consuming code when the progress bar has incremented.
+
+        Expose an event handler that notifies consuming code when the widget state has changed.
+                
     */
 
     //creating SVG space
-    var draw = SVG.addTo('body').size('100%, 100%').move(20,20);
+    var draw = SVG().addTo('body').size('100%', '100%');
 
-    //creating progress bar grouping
-    progressBarGroup = draw.group();
+    //creating progress bar grouping/design
+    var progressBarGroup = draw.group();
 
-        //rectangle
-        var rect = progressBarGroup.rect(100,30).stroke('black')
-        .attr({"border-radius":"5px"});
+        var outerRect = progressBarGroup.rect(200,30).stroke('black')
+        .radius(10).fill('none');
+
+        var innerRect = progressBarGroup.rect(0,30).radius(10).fill('green');
+        
+        return {
+            move: function(x, y) {
+                progressBarGroup.move(x, y);
+            },
+    
+            //(C): Expose an event handler that notifies consuming code when the button is clicked.
+            onclick: function(eventHandler){
+                clickEvent = eventHandler
+                console.log("button clicked");
+            },
+            
+            setWidth: function(width){
+                progressBarGroup.attr("width", width);
+            },
+            // increment: function(zeroThroughHundredValue){
+            //     if(zeroThroughHundredValue > 200){
+            //         alert("value exceeds width of progress bar. Try again.")
+            //     }
+            //     else{
+            //         innerRect.size(zeroThroughHundredValue,30).radius(10);
+            //     }
+            // },
+            changeProgressBarSize: function(size){
+                outerRect.size(size,30).stroke('black')
+                .radius(10).fill('none');
 
 
-}
+            }
+            
+        }
+
+    }
 return {Button,CheckBox,ProgressBar}
 }()); //end of tool kit
 
