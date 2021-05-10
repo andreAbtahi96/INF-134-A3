@@ -31,5 +31,9 @@ checkBox.onclick(function(e){
 // });
 
 var progressBar = new MyToolkit.ProgressBar;
-progressBar.move(20,20)
+progressBar.move(10,20);
+progressBar.changeProgressBarSize(400);
 
+var progressBar1 = new MyToolkit.ProgressBar;
+progressBar1.move(102,20);
+progressBar1.changeProgressBarSize(300);
