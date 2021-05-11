@@ -2,17 +2,14 @@
 import { SVG } from './svg.min.js'
 
 var MyToolkit = (function() {
+/*
+    Visually change for at least three states (e.g., color change on hover).
 
-    //creating the window
-
-    /*
-    INPROGRESS:
-        -custom label to set text
-        -expose event handler that notifies cosuming code when checked state has changed.
-        -Expose an event handler that notifies consuming code when the widget state has changed
-
-        
-    TODO:
+    Expose a custom label property to set the text on the button.
+    
+    Expose an event handler that notifies consuming code when the button is clicked.
+    
+    Expose an event handler that notifies consuming code when the widget state has changed.
 
 */
     var Button = function(){
@@ -160,16 +157,13 @@ var MyToolkit = (function() {
 
 
 /*
-COMPLETE: 
-    -Fix check state of checkbox
+Visually support checked and unchecked states.
 
-INPROGRESS:
-    -Fix check state of checkbox
-    
-TODO:
-    -expose a custom label property to set text on the right of checkbox
-    -expose event handler that notifies cosuming code when checked state has changed.
-    -Expose an event handler that notifies consuming code when the widget state has changed
+Expose a custom label property to set the text that appears to the right of the check box.
+
+Expose an event handler that notifies consuming code when the checked state has changed.
+
+Expose an event handler that notifies consuming code when the widget state has changed.
 */
     var CheckBox = function(){
 
@@ -301,19 +295,22 @@ TODO:
     var ProgressBar = function(){
     /*     
         
-        Expose a custom property to set the width of the progress bar. 
+        Expose a custom property to set the width of the progress bar. (DONE)
 
-        Expose a custom property to set the increment value of the progress bar.
+        Expose a custom property to set the increment value of the progress bar. (DONE)
 
-        Expose a custom property to get the increment value of the progress bar.
+        Expose a custom property to get the increment value of the progress bar. (DONE)
 
-        Expose a custom method to increment the value of the progress bar. The method should support an arbitrary numerical value from 0-100.
+        Expose a custom method to increment the value of the progress bar. The method should support an arbitrary numerical value from 0-100. (DONE)
 
         Expose an event handler that notifies consuming code when the progress bar has incremented.
 
         Expose an event handler that notifies consuming code when the widget state has changed.
                 
     */
+
+    //object variables
+    var WIDTH, PROGRESSBARVALUE;
 
     //creating SVG space
     var draw = SVG().addTo('body').size('100%', '100%');
@@ -323,7 +320,6 @@ TODO:
 
         var outerRect = progressBarGroup.rect(200,30).stroke('black')
         .radius(10).fill('none');
-
         var innerRect = progressBarGroup.rect(0,30).radius(10).fill('green');
         
         return {
@@ -337,28 +333,65 @@ TODO:
                 console.log("button clicked");
             },
             
-            setWidth: function(width){
-                progressBarGroup.attr("width", width);
+            setWidthOfBar: function(width){
+                WIDTH = width;
+                outerRect.attr("width", width);
+
             },
-            // increment: function(zeroThroughHundredValue){
-            //     if(zeroThroughHundredValue > 200){
+
+            // setIncrementBarValue: function(zeroThroughHundredValue){
+            //     if(zeroThroughHundredValue > WIDTH){
             //         alert("value exceeds width of progress bar. Try again.")
             //     }
             //     else{
-            //         innerRect.size(zeroThroughHundredValue,30).radius(10);
+            //         //innerRect.size(zeroThroughHundredValue,30).radius(10);
+            //         innerRect.attr("width", zeroThroughHundredValue);
+            //         PROGRESSBARVALUE = zeroThroughHundredValue;
+
             //     }
-            // },
-            changeProgressBarSize: function(size){
-                outerRect.size(size,30).stroke('black')
-                .radius(10).fill('none');
+            //using percentages
+            setIncrementBarValue: function(zeroThroughHundredValue){
+                var argumentInPercentage = zeroThroughHundredValue/100;
+                var portionOfBar = argumentInPercentage * WIDTH;
 
+                if(zeroThroughHundredValue > 100){
+                    alert("value exceeds 100. Enter a value 0-100.")
+                }
+                else{
+                    //innerRect.size(zeroThroughHundredValue,30).radius(10);
 
+                    // var percentageOfWidth = (zeroThroughHundredValue/WIDTH)*WIDTH;
+                    innerRect.attr("width", portionOfBar);
+                    PROGRESSBARVALUE = zeroThroughHundredValue
+
+                }
+            },
+            getIncrementBarValue: function(){
+                return PROGRESSBARVALUE;
             }
             
         }
 
     }
-return {Button,CheckBox,ProgressBar}
+
+    var RadioButton = function(){
+        //build SVG with fill
+        var draw = SVG().addTo('body').size('100%','100%'); //build SVG space
+
+         //creating a group object for radio button
+         var radioGroup = draw.group();  
+         var outerCircle = radioGroup.circle(20).fill("none").stroke('black').width(5);
+         var innerCircle = radioGroup.circle(20).fill('blue');
+
+
+
+         return {
+            move: function(x, y) {
+                radioGroup.move(x, y);
+            }
+        }
+    }
+return {Button,CheckBox,ProgressBar,RadioButton}
 }()); //end of tool kit
 
 export{MyToolkit}
