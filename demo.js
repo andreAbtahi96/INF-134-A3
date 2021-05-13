@@ -47,3 +47,6 @@ textBox.insertText("hello")
 
 var scroll = new MyToolkit.ScrollBar;
 scroll.move(1,5);
+
+var text = new MyToolkit.AddAComment;
+text.move(1,40);

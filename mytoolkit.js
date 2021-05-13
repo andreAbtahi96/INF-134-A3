@@ -524,7 +524,38 @@ Expose an event handler that notifies consuming code when the widget state has c
             }
         }
     }
-return {Button,CheckBox,ProgressBar,RadioButton,TextBox,ScrollBar}
+
+    var AddAComment = function(){
+
+        //creating SVG space
+        var draw = SVG().addTo('body').size('100%', '100%');
+
+        //1.box with comment text
+        //creating a group object for button
+        var buttonGroup = draw.group();  
+        var rect = buttonGroup.rect(100,40).fill('red').radius(10);
+
+        //add text button
+        var buttonText = buttonGroup.text("Comment").fill('white').attr({"font-size": '20'})
+        .move(10,8)
+
+        //3. text box on side
+        //creating textbox grouping/design
+        var textBoxGroup = draw.group();
+        var outerRect = textBoxGroup.rect(200,40).stroke('black')
+        .radius(10).fill('white');
+        var text = textBoxGroup.text("placeholder").move(5,5);
+        var caret = textBoxGroup.line(45,2.5,45,25).stroke({width:1,color:"black"}).move(80,5)
+        textBoxGroup.move(100,40)
+        //4. on click -> box goes away and text box appears to add text.
+        
+        return{
+            move: function(x,y){
+                buttonGroup.move(x,y);
+            }
+        }
+    }
+return {Button,CheckBox,ProgressBar,RadioButton,TextBox,ScrollBar,AddAComment}
 }()); //end of tool kit
 
 export{MyToolkit}
