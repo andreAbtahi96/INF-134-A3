@@ -376,22 +376,155 @@ Expose an event handler that notifies consuming code when the widget state has c
 
     var RadioButton = function(){
         //build SVG with fill
+
+        
         var draw = SVG().addTo('body').size('100%','100%'); //build SVG space
 
          //creating a group object for radio button
          var radioGroup = draw.group();  
-         var outerCircle = radioGroup.circle(20).fill("none").stroke('black').width(5);
-         var innerCircle = radioGroup.circle(20).fill('blue');
+         var outerCircle = radioGroup.circle(20).stroke('black').fill('#89cff0');
+         var innerCircle = radioGroup.circle(15).fill('blue').move(2.5,2.5);
 
+         //standard init provides 2 radio buttons at minimum
+        //  function constructor(number){
+        //     var listOfButtons = [];
+        //      for (let index = 0; index < number; index++) {
+        //         listOfButtons.push(new RadioButton());
+                
+        //     }
+        //     return listOfButtons;
+        // }
+         
+
+        //Expose an event handler that notifies consuming code when the widget state has changed.
+        var clickEvent = null
+        var isSelected = false;
+
+
+        radioGroup.mouseover(function(){
+            this.fill({ color: 'blue'})
+        })
+        radioGroup.mouseout(function(){
+            this.fill({ color: 'red'})
+        })
+        radioGroup.mouseup(function(){
+            this.fill({ color: 'red'})
+        })
+        //captures click event from browser
+        radioGroup.click(function(event){
+            this.fill({ color: 'pink'})
+            if(clickEvent != null)
+                clickEvent(event)
+
+            if(innerCircle.visible()){
+                innerCircle.hide();
+                isSelected = false;
+            }
+            else{
+                innerCircle.show();
+                isSelected = true;
+    
+            }
+
+            console.log("button clicked");
+        })
 
 
          return {
             move: function(x, y) {
                 radioGroup.move(x, y);
+            },
+            onclick: function(eventHandler){
+                clickEvent = eventHandler
+                console.log("button clicked");
+            },
+            setId: function(id){
+                radioGroup.attr("id", id);
             }
         }
     }
-return {Button,CheckBox,ProgressBar,RadioButton}
+
+    var TextBox = function(){
+        //creating SVG space
+        var draw = SVG().addTo('body').size('100%', '100%');
+
+        //variables
+        var id;
+
+        //creating textbox grouping/design
+        var textBoxGroup = draw.group();
+        var outerRect = textBoxGroup.rect(200,30).stroke('black')
+        .radius(10).fill('white');
+        var text = textBoxGroup.text("placeholder").move(5,5);
+        var caret = textBoxGroup.line(45,2.5,45,25).stroke({width:1,color:"black"}).move(80,5)
+
+        //captures click event from browser
+        text.click(function(event){
+        // this.fill({ color: 'black'})
+        
+        if(clickEvent != null){
+            clickEvent(event)
+            this.text.addEventListener("input",logKey);
+        }
+
+
+    })
+
+    function logKey(txt){
+        console.log(userText);
+    }
+        
+
+        //methods
+        return{
+            move: function(x,y){
+                textBoxGroup.move(x,y);
+            },
+            insertText: function(userText){
+                text.text(userText);
+
+            }
+        }
+    }
+
+    var ScrollBar = function(){
+
+        var HEIGHT;
+
+        //creating SVG space
+        var draw = SVG().addTo('body').size('100%','100%');
+
+        //design
+        var scrollBarGroup = draw.group();
+
+        //1.vertical rectangle
+        var outerRect = scrollBarGroup.rect(30,130).stroke('black')
+        .fill('none').radius;
+
+        //2.two small squares at each end
+        var topRect = scrollBarGroup.rect(30,30).stroke('black')
+        .fill('none');
+        var topArrow = scrollBarGroup.polygon('50,0 60,20 40,20').move(6,4);
+
+        var buttomRect = scrollBarGroup.rect(30,100).stroke('black')
+        .fill('none');
+        var bottomArrow = scrollBarGroup.polygon('50,20 60,0 40,0').move(6,105);
+
+        //3.eclipse for the dragger
+        var shifter = scrollBarGroup.rect(30, 30).move(0,30).stroke('black').fill('gray');
+
+        //4.grip
+        var grip1 = scrollBarGroup.line(0,0,30,0).stroke({color:'black', width:2}).move(0,40)
+        var grip2 = scrollBarGroup.line(0,0,30,0).stroke({color:'black', width:2}).move(0,45)
+        var grip3 = scrollBarGroup.line(0,0,30,0).stroke({color:'black', width:2}).move(0,50)
+
+        return{
+            move: function(x,y){
+                scrollBarGroup.move(x,y);
+            }
+        }
+    }
+return {Button,CheckBox,ProgressBar,RadioButton,TextBox,ScrollBar}
 }()); //end of tool kit
 
 export{MyToolkit}
