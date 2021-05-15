@@ -285,31 +285,11 @@ var MyToolkit = (function() {
             clickEvent = eventHandler
             console.log("button clicked");
         },
-
-        
-        //IN PROGRESS(B): Expose a custom label property to set the text on the button.
-        // Providing a more dynamic experience when adding text.
-
         setText: function(userText){
-
-            //(A)
-            // if(userText.length > 10){
-
-            //     var firstHalf = userText.slice(0, userText.length/2);
-            //     var secondHalf = userText.slice(firstHalf.length, userText.length);
-                
-            //     text.build(true); //enabled build mode
-
-            //     var tspan = text.tspan(firstHalf).newLine();
-
-            //     text.tspan(secondHalf).newLine();
-            //     rect.size(xDimmension,yDimmension*2);
-            //     text.tspan.tspan(secondHalf).newLine();
-            // }
             text.text(userText);
         },
         setId: function(id){
-            rect.attr("id", id);
+            checkBoxGroup.attr("id", id);
         }
     }
     }//Button
@@ -393,6 +373,9 @@ var MyToolkit = (function() {
             },
             getIncrementBarValue: function(){
                 return PROGRESSBARVALUE;
+            },
+            setId: function(id){
+                progressBarGroup.attr("id", id);
             }
             
         }
@@ -422,7 +405,7 @@ var MyToolkit = (function() {
          var innerCircle = radioGroup.circle(15).fill('white').move(2.5,2.5);
 
 
-         var text = radioGroup.text(" ").fill(BLUE).attr({"font-size": '16'}).x(30).y(-4);
+         var text = radioGroup.text(" ").fill(BLUE).attr({"font-size": '20'}).x(30).y(-8);
          text.stroke({color: BLUE, width: 1});
          //text.addTo(radioGroup);
 
@@ -443,34 +426,6 @@ var MyToolkit = (function() {
         var clickEvent = null
         var isSelected = false;
 
-
-        // radioGroup.mouseover(function(){
-        //     this.fill({ color: 'blue'})
-        // })
-        // radioGroup.mouseout(function(){
-        //     this.fill({ color: 'red'})
-        // })
-        // radioGroup.mouseup(function(){
-        //     this.fill({ color: 'red'})
-        // })
-        // //captures click event from browser
-        // radioGroup.click(function(event){
-        //     this.fill({ color: 'pink'})
-        //     if(clickEvent != null)
-        //         clickEvent(event)
-
-        //     if(innerCircle.visible()){
-        //         innerCircle.hide();
-        //         isSelected = false;
-        //     }
-        //     else{
-        //         innerCircle.show();
-        //         isSelected = true;
-    
-        //     }
-
-        //     console.log("button clicked");
-        // })
 
         innerCircle.mouseover(function(){
             innerCircle.fill({color: BLUE})
@@ -546,25 +501,40 @@ var MyToolkit = (function() {
 
         //variables
         var id;
+        var clickEvent = null
+
 
         //creating textbox grouping/design
         var textBoxGroup = draw.group();
         var outerRect = textBoxGroup.rect(200,30).stroke('black')
         .radius(10).fill('white');
-        var text = textBoxGroup.text("placeholder").move(5,5);
-        var caret = textBoxGroup.line(45,2.5,45,25).stroke({width:1,color:"black"}).move(80,5)
+        var text = textBoxGroup.text("hello").move(5,5);
+        //var caret = textBoxGroup.line(45,2.5,45,25).stroke({width:1,color:"black"}).move(80,5)
 
-        //captures click event from browser
-        text.click(function(event){
-        // this.fill({ color: 'black'})
+
+    //     //captures click event from browser
+        textBoxGroup.click(function(event){
+        outerRect.fill({ color: 'gray'})
         
         if(clickEvent != null){
-            clickEvent(event)
-            this.text.addEventListener("input",logKey);
+            clickEvent = event;
+            console.log("made it here")
+            //this.text.addEventListener("input",logKey,false);
         }
-
+        clickEvent = event;
 
     })
+    textBoxGroup.on('keyup', function(e){
+        text.text(e.key)
+    
+    })
+
+
+    // function userInput(event){
+    //     var text;
+    //     // text += event.value.text;
+    //     console.log(text);
+    // }
 
     function logKey(txt){
         console.log(userText);
@@ -579,6 +549,12 @@ var MyToolkit = (function() {
             insertText: function(userText){
                 text.text(userText);
 
+            },
+            setId: function(id){
+                textBoxGroup.attr("id", id);
+            },
+            onType: function(eventHandler){
+                clickEvent = eventHandler;
             }
         }
     }
@@ -626,6 +602,9 @@ var MyToolkit = (function() {
         return{
             move: function(x,y){
                 scrollBarGroup.move(x,y);
+            },
+            setId: function(id){
+                scrollBarGroup.attr("id", id);
             }
         }
     }
@@ -657,7 +636,11 @@ var MyToolkit = (function() {
         return{
             move: function(x,y){
                 buttonGroup.move(x,y);
+            },
+            setId: function(id){
+                buttonGroup.attr("id", id);
             }
+            
         }
     }
 return {Button,CheckBox,ProgressBar,RadioButton,TextBox,ScrollBar,AddAComment}

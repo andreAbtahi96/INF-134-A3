@@ -44,7 +44,8 @@ radio.move(5,5)
 
 var textBox = new MyToolkit.TextBox;
 textBox.move(5,5);
-textBox.insertText("hello")
+// textBox.setId("king");
+// var text = document.querySelector("king");
 
 var scroll = new MyToolkit.ScrollBar;
 scroll.move(1,5);
