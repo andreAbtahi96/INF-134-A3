@@ -2,18 +2,29 @@
 import { SVG } from './svg.min.js'
 
 var MyToolkit = (function() {
-/*
-    Visually change for at least three states (e.g., color change on hover).
 
-    Expose a custom label property to set the text on the button.
+    //COLOR SCHEME PALLET
+    var BLUE = '#004571';
+    var YELLOW = '#f6aa0d';
     
-    Expose an event handler that notifies consuming code when the button is clicked.
-    
-    Expose an event handler that notifies consuming code when the widget state has changed.
+    var HOVERBLUE = '#00386c';
+    var HOVERYELLOW = '#DF9336';
 
-*/
+    var FOCUSCOLOR = '#5e9ed6'; //color: FOCUSCOLOR, width:'4'
+
+
     var Button = function(){
 
+    /*
+        Visually change for at least three states (e.g., color change on hover).
+
+        Expose a custom label property to set the text on the button.
+        
+        Expose an event handler that notifies consuming code when the button is clicked.
+        
+        Expose an event handler that notifies consuming code when the widget state has changed.
+
+    */
         var xDimmension = 200;
         var yDimmension = 50;
 
@@ -24,12 +35,16 @@ var MyToolkit = (function() {
 
         //creating a group object for button
         var buttonGroup = draw.group();  
-        var rect = buttonGroup.rect(200,50).fill('red').radius(10);
+        var rect = buttonGroup.rect(200,50).fill(BLUE).radius(10);
 
         //add text button
         //buttonGroup.text("Click Here").fill('white').attr({"font-size": '20'}).x(5).y(10);
         var text = buttonGroup.text("Button:").fill('white').attr({"font-size": '20'})
         .cx(90).cy(25);
+
+        text.addTo(buttonGroup);
+
+        
         // text.addTo(buttonGroup);
 
         //Expose an event handler that notifies consuming code when the widget state has changed.
@@ -38,17 +53,20 @@ var MyToolkit = (function() {
         //(A) visually change for at least three states 
         //(D) Expose an event handler that notifies consuming code when the widget state has changed.
         rect.mouseover(function(){
-            this.fill({ color: 'blue'})
+            this.fill({ color: HOVERBLUE})
+            
         })
         rect.mouseout(function(){
-            this.fill({ color: 'red'})
+            this.fill({ color: BLUE})
+            this.stroke('none')
         })
-        rect.mouseup(function(){
-            this.fill({ color: 'red'})
+        rect.mousedown(function(){
+            this.fill({ color: HOVERBLUE })
         })
         //captures click event from browser
         rect.click(function(event){
-            this.fill({ color: 'pink'})
+            this.fill({ color: YELLOW})
+            this.stroke({color: FOCUSCOLOR, width:'4'} )
             if(clickEvent != null)
                 clickEvent(event)
 
@@ -156,16 +174,18 @@ var MyToolkit = (function() {
 // }//CheckBox
 
 
-/*
-Visually support checked and unchecked states.
 
-Expose a custom label property to set the text that appears to the right of the check box.
-
-Expose an event handler that notifies consuming code when the checked state has changed.
-
-Expose an event handler that notifies consuming code when the widget state has changed.
-*/
     var CheckBox = function(){
+
+    /*
+    Visually support checked and unchecked states. (DONE)
+
+    Expose a custom label property to set the text that appears to the right of the check box.(DONE)
+
+    Expose an event handler that notifies consuming code when the checked state has changed.
+
+    Expose an event handler that notifies consuming code when the widget state has changed.
+    */
 
     var xDimmension = 200;
     var yDimmension = 50;
@@ -183,17 +203,17 @@ Expose an event handler that notifies consuming code when the widget state has c
     //adding checkmark design
     var checkMarkGroup = draw.group();
     var downLine = checkMarkGroup.line(0,0,5,5).move(10,20);
-    downLine.stroke({ color: '#f06', width: 5, linecap: 'round',padding:'20px 20px'})
+    downLine.stroke({ color: YELLOW, width: 5, linecap: 'round',padding:'20px 20px'})
     var upLine = checkMarkGroup.line(10,-10,0,0).move(15,15);
-    upLine.stroke({ color: '#f06', width: 5, linecap: 'round', padding:'10px 10px' })
-    checkMarkGroup.attr({padding:'50px 50px'})
+    upLine.stroke({ color: YELLOW, width: 5, linecap: 'round', padding:'10px 10px' })
+    checkMarkGroup.attr({padding:'100px 50px'})
     checkMarkGroup.addTo(checkBoxGroup);
-    checkMarkGroup.move(5,10);
-    checkMarkGroup.hide();
+    checkMarkGroup.move(5,7);
+    // checkMarkGroup.hide();
 
     //add text button
-    var text = checkBoxGroup.text("Text").fill('#f06').attr({"font-size": '20'}).x(30).y(5);
-    text.stroke({color: '#f06', width: 1});
+    var text = checkBoxGroup.text("Text").fill(BLUE).attr({"font-size": '20'}).x(30).y(0);
+    text.stroke({color: BLUE, width: 1});
     text.addTo(checkBoxGroup);
 
 
@@ -206,20 +226,22 @@ Expose an event handler that notifies consuming code when the widget state has c
     //(A) visually change for at least three states 
     //(D) Expose an event handler that notifies consuming code when the widget state has changed.
     rect.mouseover(function(){
-        this.fill({ color: 'white'})
+        this.fill({ color: HOVERBLUE})
         // checkMarkGroup.show();
     })
     rect.mouseout(function(){
-        this.fill({ color: 'none'})
+        this.fill({ color: 'white'})
         // checkMarkGroup.hide();
     })
     rect.mouseup(function(){
-        this.fill({ color: 'white'})
+        this.fill({ color: 'none'})
     })
 
     //captures click event from browser
     rect.click(function(event){
         // this.fill({ color: 'black'})
+
+        console.log(event)
         
         if(clickEvent != null){
             clickEvent(event)
@@ -228,7 +250,7 @@ Expose an event handler that notifies consuming code when the widget state has c
             checkMarkGroup.hide();
             isChecked = false;
         }
-        else{
+        else if(!checkMarkGroup.visible()){
             checkMarkGroup.show();
             isChecked = true;
 
@@ -236,20 +258,20 @@ Expose an event handler that notifies consuming code when the widget state has c
 
         console.log("checkbox clicked");
     })
-    // checkMarkGroup.click(function(event){
-    //     // this.fill({ color: 'black'})
+    checkMarkGroup.click(function(event){
+        // this.fill({ color: 'black'})
         
-    //     if(clickEvent != null){
-    //         clickEvent(event)
-    //     }
-    //     if(checkMarkGroup.visible())
-    //         checkMarkGroup.hide();
-    //     else{
-    //         checkMarkGroup.show();
-    //     }
+        // if(clickEvent != null){
+        //     clickEvent(event)
+        // }
+        if(checkMarkGroup.visible())
+            checkMarkGroup.hide();
+        else{
+            checkMarkGroup.show();
+        }
 
-    //     console.log("checkbox clicked");
-    // })
+        console.log("checkbox clicked");
+    })
 
 
     //on intantiation, these fire off.
@@ -268,7 +290,7 @@ Expose an event handler that notifies consuming code when the widget state has c
         //IN PROGRESS(B): Expose a custom label property to set the text on the button.
         // Providing a more dynamic experience when adding text.
 
-        text: function(userText){
+        setText: function(userText){
 
             //(A)
             // if(userText.length > 10){
@@ -311,6 +333,7 @@ Expose an event handler that notifies consuming code when the widget state has c
 
     //object variables
     var WIDTH, PROGRESSBARVALUE;
+    var barHasIncremented, widgetHasIncremented = false;
 
     //creating SVG space
     var draw = SVG().addTo('body').size('100%', '100%');
@@ -320,7 +343,7 @@ Expose an event handler that notifies consuming code when the widget state has c
 
         var outerRect = progressBarGroup.rect(200,30).stroke('black')
         .radius(10).fill('none');
-        var innerRect = progressBarGroup.rect(0,30).radius(10).fill('green');
+        var innerRect = progressBarGroup.rect(0,30).radius(10).fill(BLUE);
         
         return {
             move: function(x, y) {
@@ -363,6 +386,8 @@ Expose an event handler that notifies consuming code when the widget state has c
                     // var percentageOfWidth = (zeroThroughHundredValue/WIDTH)*WIDTH;
                     innerRect.attr("width", portionOfBar);
                     PROGRESSBARVALUE = zeroThroughHundredValue
+                    barHasIncremented = true;
+                    widgetHasIncremented = true;
 
                 }
             },
@@ -375,16 +400,34 @@ Expose an event handler that notifies consuming code when the widget state has c
     }
 
     var RadioButton = function(){
-        //build SVG with fill
+        /*
+        Visually support checked and unchecked states.
 
+        Support 2 to n number of buttons, where n is set by the consuming code, with minimum of two, positioned vertically.
+        
+        Ensure that only one button can be checked at a time.
+        
+        Expose a custom label property to set the text that appears to the right of each button.(DONE)
+        
+        Expose an event handler that notifies consuming code when the checked state has changed and which n has been checked.
+        
+        Expose an event handler that notifies consuming code when the widget state has changed.
+        */  
         
         var draw = SVG().addTo('body').size('100%','100%'); //build SVG space
 
          //creating a group object for radio button
          var radioGroup = draw.group();  
-         var outerCircle = radioGroup.circle(20).stroke('black').fill('#89cff0');
-         var innerCircle = radioGroup.circle(15).fill('blue').move(2.5,2.5);
+         var outerCircle = radioGroup.circle(20).fill('none').stroke({color:'black'});
+         var innerCircle = radioGroup.circle(15).fill('white').move(2.5,2.5);
 
+
+         var text = radioGroup.text(" ").fill(BLUE).attr({"font-size": '16'}).x(30).y(-4);
+         text.stroke({color: BLUE, width: 1});
+         //text.addTo(radioGroup);
+
+
+        //innerCircle.hide()
          //standard init provides 2 radio buttons at minimum
         //  function constructor(number){
         //     var listOfButtons = [];
@@ -401,33 +444,72 @@ Expose an event handler that notifies consuming code when the widget state has c
         var isSelected = false;
 
 
-        radioGroup.mouseover(function(){
-            this.fill({ color: 'blue'})
-        })
-        radioGroup.mouseout(function(){
-            this.fill({ color: 'red'})
-        })
-        radioGroup.mouseup(function(){
-            this.fill({ color: 'red'})
-        })
-        //captures click event from browser
-        radioGroup.click(function(event){
-            this.fill({ color: 'pink'})
-            if(clickEvent != null)
-                clickEvent(event)
+        // radioGroup.mouseover(function(){
+        //     this.fill({ color: 'blue'})
+        // })
+        // radioGroup.mouseout(function(){
+        //     this.fill({ color: 'red'})
+        // })
+        // radioGroup.mouseup(function(){
+        //     this.fill({ color: 'red'})
+        // })
+        // //captures click event from browser
+        // radioGroup.click(function(event){
+        //     this.fill({ color: 'pink'})
+        //     if(clickEvent != null)
+        //         clickEvent(event)
 
-            if(innerCircle.visible()){
-                innerCircle.hide();
-                isSelected = false;
+        //     if(innerCircle.visible()){
+        //         innerCircle.hide();
+        //         isSelected = false;
+        //     }
+        //     else{
+        //         innerCircle.show();
+        //         isSelected = true;
+    
+        //     }
+
+        //     console.log("button clicked");
+        // })
+
+        innerCircle.mouseover(function(){
+            innerCircle.fill({color: BLUE})
+
+            // checkMarkGroup.show();
+        })
+        outerCircle.mouseout(function(){
+            if(isSelected){
+                innerCircle.fill({ color: BLUE})
+
             }
             else{
-                innerCircle.show();
-                isSelected = true;
-    
+                innerCircle.fill({ color: 'white'})
             }
-
-            console.log("button clicked");
+            // checkMarkGroup.hide();
         })
+        outerCircle.mouseup(function(){
+            innerCircle.fill({ color: BLUE})
+            isSelected = true;
+        })
+        radioGroup.mousedown(function(){
+            innerCircle.fill({ color: HOVERBLUE})
+            isSelected = true;
+
+        })
+
+    
+        //captures click event from browser
+        radioGroup.click(function(event){
+            // this.fill({ color: 'black'}))
+
+            innerCircle.fill({color: BLUE})
+    
+            isSelected = true;
+
+    
+            console.log("radio clicked");
+        })
+
 
 
          return {
@@ -440,11 +522,25 @@ Expose an event handler that notifies consuming code when the widget state has c
             },
             setId: function(id){
                 radioGroup.attr("id", id);
+            },
+            setText: function(userText){
+                text.text(userText);
             }
         }
     }
 
     var TextBox = function(){
+
+        /*
+        Visually support a caret | that informs the user about the position of the cursor. The caret should only be visually present when the widget has hover focus.
+
+        Expose a custom property to get the text entered by the user.
+
+        Expose an event handler that notifies consuming code when the text has changed.
+
+        Expose an event handler that notifies consuming code when the widget state has changed.
+        */
+
         //creating SVG space
         var draw = SVG().addTo('body').size('100%', '100%');
 
@@ -489,6 +585,15 @@ Expose an event handler that notifies consuming code when the widget state has c
 
     var ScrollBar = function(){
 
+        /*
+        Expose a custom property to set the height of the scroll bar.
+
+        Expose a custom property to get the position of the scroll thumb.
+
+        Expose an event handler that notifies consuming code when the scroll thumb has moved and in which direction.
+
+        Expose an event handler that notifies consuming code when the widget state has changed.
+        */
         var HEIGHT;
 
         //creating SVG space

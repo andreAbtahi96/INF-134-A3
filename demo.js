@@ -21,7 +21,7 @@ btn.onclick(function(e){
 // Implement a MyToolkit Checkbx
 var checkBox = new MyToolkit.CheckBox; //init checkbox
 checkBox.setId("checkbox1");	//set id
-checkBox.text("isActive");	//set text on 
+checkBox.setText("Is this statement true");	//set text on 
 checkBox.move(10,5);
 checkBox.onclick(function(e){
 	console.log(e);
@@ -39,6 +39,7 @@ var value = progressBar.getIncrementBarValue()
 console.log(value);
 
 var radio = new MyToolkit.RadioButton;
+radio.setText("test");
 radio.move(5,5)
 
 var textBox = new MyToolkit.TextBox;
