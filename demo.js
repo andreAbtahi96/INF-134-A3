@@ -5,7 +5,7 @@ import {MyToolkit} from './mytoolkit.js';
 // // Implement a MyToolkit Button
 var btn = new MyToolkit.Button;
 btn.setId("button1");
-btn.text("Click Here");
+btn.setText("Click Here");
 btn.move(0,25);
 btn.onclick(function(e){
 	console.log("entered demo version of onclick function");
@@ -38,10 +38,10 @@ progressBar.setIncrementBarValue(69);
 var value = progressBar.getIncrementBarValue()
 console.log(value);
 
-var radio = new MyToolkit.RadioButton;
-radio.setText("test");
-radio.move(5,5)
-
+var radio = new MyToolkit.RadioButton(3);
+// radio.setText("efe")
+//console.log(radio[0].node.lastChild.lastChild.innerHTML = "r")
+//radio[0].node.lastChild.lastChild.innerHTML = "r"
 var textBox = new MyToolkit.TextBox;
 textBox.move(5,5);
 // textBox.setId("king");
@@ -50,5 +50,5 @@ textBox.move(5,5);
 var scroll = new MyToolkit.ScrollBar;
 scroll.move(1,5);
 
-var text = new MyToolkit.AddAComment;
-text.move(1,40);
+// var text = new MyToolkit.AddAComment;
+// text.move(1,40);

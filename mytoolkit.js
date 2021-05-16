@@ -16,9 +16,9 @@ var MyToolkit = (function() {
     var Button = function(){
 
     /*
-        Visually change for at least three states (e.g., color change on hover).
+        Visually change for at least three states (e.g., color change on hover). (DONE)
 
-        Expose a custom label property to set the text on the button.
+        Expose a custom label property to set the text on the button.(DONE)
         
         Expose an event handler that notifies consuming code when the button is clicked.
         
@@ -29,7 +29,6 @@ var MyToolkit = (function() {
         var yDimmension = 50;
 
         //creating SVG
-
         //build SVG with fill
         var draw = SVG().addTo('body').size('100%','100%'); //build SVG space
 
@@ -38,7 +37,6 @@ var MyToolkit = (function() {
         var rect = buttonGroup.rect(200,50).fill(BLUE).radius(10);
 
         //add text button
-        //buttonGroup.text("Click Here").fill('white').attr({"font-size": '20'}).x(5).y(10);
         var text = buttonGroup.text("Button:").fill('white').attr({"font-size": '20'})
         .cx(90).cy(25);
 
@@ -70,6 +68,7 @@ var MyToolkit = (function() {
             if(clickEvent != null)
                 clickEvent(event)
 
+                alert("YOU CLICKED ME")
             console.log("button clicked");
         })
         //on intantiation, these fire off.
@@ -81,14 +80,14 @@ var MyToolkit = (function() {
             //(C): Expose an event handler that notifies consuming code when the button is clicked.
             onclick: function(eventHandler){
                 clickEvent = eventHandler
-                console.log("button clicked");
+                //console.log("button clicked");
             },
 
             
             //IN PROGRESS(B): Expose a custom label property to set the text on the button.
             // Providing a more dynamic experience when adding text.
 
-            text: function(userText){
+            setText: function(userText){
 
                 //(A)
                 // if(userText.length > 10){
@@ -105,6 +104,8 @@ var MyToolkit = (function() {
                 //     text.tspan.tspan(secondHalf).newLine();
                 // }
                 text.text(userText);
+                text.attr({'label': userText});
+                
             },
             setId: function(id){
                 rect.attr("id", id);
@@ -112,69 +113,6 @@ var MyToolkit = (function() {
         }
     }//Button
         
-
-
-// //in progress
-// var CheckBox = function(){
-//     var draw = SVG().addTo('body').size('100%','50%');
-
-//     //rectangle and design
-//     var checkBoxGroup = draw.group();
-//     var rect = checkBoxGroup.rect(25,25).fill('none');
-//     rect.stroke({color: 'gray', width: 2});
-
-//     //adding checkmark design
-//     var checkMarkGroup = draw.group();
-//     var downLine = checkMarkGroup.line(0,0,5,5).move(10,20);
-//     downLine.stroke({ color: '#f06', width: 5, linecap: 'round' })
-//     var upLine = checkMarkGroup.line(10,-10,0,0).move(15,15);
-//     upLine.stroke({ color: '#f06', width: 5, linecap: 'round' })
-
-//     checkMarkGroup.addTo(checkBoxGroup);
-//     checkMarkGroup.move(5,10)
-
-//     //Expose an event handler that notifies consuming code when the widget state has changed.
-//     var clickEvent = null
-
-//     //captures click event from browser
-//     checkBoxGroup.click(function(event){
-//         console.log("clicked")
-//         if(checkMarkGroup.visible())
-//             checkMarkGroup.hide();
-//         {
-//             checkMarkGroup.show();
-//         }
-//         // if(clickEvent != null)
-//         //     clickEvent(event)
-
-//         console.log("button clicked");
-//     })
-
-//     return {
-//         move: function(x, y) {
-//             checkBoxGroup.move(x, y);
-//         },
-//         setId: function(id){
-//             rect.attr("id", id);
-//         },
-//         onclick: function(eventHandler){
-
-//             clickEvent = eventHandler
-//             console.log("checkbox clicked");
-//             // if(this.checkBoxGroup.checkMark.visible())
-//             //     this.checkMarkGroup.hide();
-//             // else{
-//             //     this.checkMarkGroup.show();
-//             // }
-
-            
-//         },
-
-//     }
-// }//CheckBox
-
-
-
     var CheckBox = function(){
 
     /*
@@ -382,7 +320,13 @@ var MyToolkit = (function() {
 
     }
 
-    var RadioButton = function(){
+    var RadioButton = function(number){
+        var list=[]; //list of radio buttons.
+
+
+        var height = number *40;
+        var heightOfSVG = height.toString();
+        console.log(heightOfSVG)
         /*
         Visually support checked and unchecked states.
 
@@ -396,19 +340,50 @@ var MyToolkit = (function() {
         
         Expose an event handler that notifies consuming code when the widget state has changed.
         */  
-        
-        var draw = SVG().addTo('body').size('100%','100%'); //build SVG space
+        if(number<2){
+            console.log("need 2 or more")
+        }
+        var draw = SVG().addTo('body').size("100%",heightOfSVG); //build SVG space
+
+
+
+        //INPROGRESS: TRYING TO CREATE MULTIPLE RADIO BUTTONS
 
          //creating a group object for radio button
-         var radioGroup = draw.group();  
-         var outerCircle = radioGroup.circle(20).fill('none').stroke({color:'black'});
-         var innerCircle = radioGroup.circle(15).fill('white').move(2.5,2.5);
+         //var radioGroups = draw.group(); 
+
+        //  var radioGroup = draw.group();  
+        //  var outerCircle = radioGroup.circle(20).fill('none').stroke({color:'black'});
+        //  var innerCircle = radioGroup.circle(15).fill('white').move(2.5,2.5);
+        //  var text = radioGroup.text(" ").fill(BLUE).attr({"font-size": '20'}).x(30).y(-8);
+        //  text.stroke({color: BLUE, width: 1});
+
+         
 
 
-         var text = radioGroup.text(" ").fill(BLUE).attr({"font-size": '20'}).x(30).y(-8);
-         text.stroke({color: BLUE, width: 1});
          //text.addTo(radioGroup);
+         for(var i = 0; i< number; i++){
 
+
+            var radioGroup = draw.group();  
+            var outerCircle = radioGroup.circle(20).fill('none').stroke({color:'black'});
+            var innerCircle = radioGroup.circle(15).fill('white').move(2.5,2.5);
+            var text = radioGroup.text("enter text").fill(BLUE).attr({"font-size": '20'}).x(30).y(-8);
+            text.stroke({color: BLUE, width: 1});
+            radioGroup.move(10,i*40)
+
+           
+            list.push(radioGroup)
+
+             //new RadioButton;
+
+             //  list[i].move(5,i*5)
+        }
+        
+ 
+        return list;
+        // list.each('fill','green');
+        // console.log(list)
 
         //innerCircle.hide()
          //standard init provides 2 radio buttons at minimum
@@ -478,9 +453,17 @@ var MyToolkit = (function() {
             setId: function(id){
                 radioGroup.attr("id", id);
             },
-            setText: function(userText){
-                text.text(userText);
+            // setText: function(userText,elementNumber){
+            //     //list[elementNumber].node.lastChild.lastChild.innerHTML = userText
+
+            //     radioGroup.text.text(userText)
+            //     //this.lastChild.key = userText
+                
+            // },
+            setText: function(text){
+                list[0].node.lastChild.lastChild.innerHTML = "r"
             }
+            
         }
     }
 
@@ -502,42 +485,75 @@ var MyToolkit = (function() {
         //variables
         var id;
         var clickEvent = null
+        var USERTEXT = "";
 
 
         //creating textbox grouping/design
         var textBoxGroup = draw.group();
         var outerRect = textBoxGroup.rect(200,30).stroke('black')
         .radius(10).fill('white');
-        var text = textBoxGroup.text("hello").move(5,5);
+        var text = textBoxGroup.text("").move(5,0);
         //var caret = textBoxGroup.line(45,2.5,45,25).stroke({width:1,color:"black"}).move(80,5)
 
 
     //     //captures click event from browser
         textBoxGroup.click(function(event){
         outerRect.fill({ color: 'gray'})
+        console.log(event);
         
         if(clickEvent != null){
             clickEvent = event;
-            console.log("made it here")
-            //this.text.addEventListener("input",logKey,false);
         }
-        clickEvent = event;
+
+        //for characters only
+        SVG.on(window,'keypress',function(e){
+            logKey(e);
+        })
+
+        //for backspace and shift only
+        SVG.on(window,'keydown',function(e){
+            if(e.key === "backspace" || e.key === "shift"){
+                console.log("here");
+                
+            }
+            modifyText(e)
+        })
+
+
 
     })
-    textBoxGroup.on('keyup', function(e){
-        text.text(e.key)
-    
-    })
 
-
+       
     // function userInput(event){
     //     var text;
     //     // text += event.value.text;
     //     console.log(text);
     // }
 
-    function logKey(txt){
-        console.log(userText);
+    function logKey(e){
+
+
+
+        // if(USERTEXT.length > outerRect.siz ){
+        //     console.log("huhf3")
+        // }
+        //userText = userText + e.key 
+        var editedText = USERTEXT + e.key;
+        USERTEXT = editedText;
+        //console.log(USERTEXT);
+        text.text(USERTEXT);
+
+        //console.log(txt.key);
+
+    }
+    function modifyText(e){
+        if(e.key === "Backspace" ){
+            console.log("backspace")
+            var editedText = USERTEXT.slice(0,-1);
+            USERTEXT = editedText;
+            text.text(USERTEXT);
+            //console.log(USERTEXT);
+        }
     }
         
 
@@ -553,7 +569,7 @@ var MyToolkit = (function() {
             setId: function(id){
                 textBoxGroup.attr("id", id);
             },
-            onType: function(eventHandler){
+            onClick: function(eventHandler){
                 clickEvent = eventHandler;
             }
         }
@@ -611,6 +627,9 @@ var MyToolkit = (function() {
 
     var AddAComment = function(){
 
+        var clickEvent = null;
+        var userComment = "";
+
         //creating SVG space
         var draw = SVG().addTo('body').size('100%', '100%');
 
@@ -633,6 +652,38 @@ var MyToolkit = (function() {
         textBoxGroup.move(100,40)
         //4. on click -> box goes away and text box appears to add text.
         
+        //     //captures click event from browser
+        textBoxGroup.click(function(event){
+            outerRect.fill({ color: 'gray'})
+            
+            if(clickEvent != null){
+                clickEvent = event;
+            }
+            SVG.on(window,'keydown',function(e){
+                updateText(e);
+                
+            })
+            // SVG.on(window,'keydown',function(e){
+            //     if(e.keycode == 8 || e.keycode == 46 ){
+            //         console.log('backspace is pressed')
+            //     }
+            // })
+
+        })
+
+        function updateText(txt){
+
+            if(txt.key == "Backspace" ){
+                console.log('backspace is pressed')
+                //remove last character from string
+            }
+            else if(txt.key == "ShiftLeft" || txt.key == "Shift") //if shift
+            console.log("shift pressed");
+            // console.log("txt.key")
+            // userComment += txt.key
+            // text.text(userComment);
+        }
+
         return{
             move: function(x,y){
                 buttonGroup.move(x,y);
