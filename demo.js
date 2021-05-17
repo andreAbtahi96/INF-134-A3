@@ -1,39 +1,58 @@
-// File name: demo.js
+ //File name: demo.js
 
-import {MyToolkit} from './mytoolkit.js';
+ import {MyToolkit} from './mytoolkit.js';
 
-// Implement a MyToolkit Button
-var btn = new MyToolkit.Button;
-btn.setId("button1");
-btn.text("Click Here");
-btn.move(0,25);
-btn.onclick(function(e){
-	console.log("entered demo version of onclick function");
-	console.log(e);
-});
+ // Implement a MyToolkit Button
+ var btn = new MyToolkit.Button;
+ btn.setId("button1");
+ btn.setText("Click Here");
+ btn.move(0,25);
+ btn.onclick(function(e){
+ 	console.log("entered demo version of onclick function");
+ 	console.log(e);
+ });
 
-// var event = function(e){
-// 	console.log(e);
-// }
-// btn.onclick(event);
+ // var event = function(e){
+ // 	console.log(e);
+ // }
+ // btn.onclick(event);
 
 
-// Implement a MyToolkit Checkbx
-var checkBox = new MyToolkit.CheckBox; //init checkbox
-checkBox.setId("checkbox1");	//set id
-checkBox.text("isActive");	//set text on 
-checkBox.move(10,5);
-checkBox.onclick(function(e){
-	console.log(e);
-})
-// checkBox.onclick(function(e){
-// 	console.log(e);
-// });
+ // Implement a MyToolkit Checkbx
+ var checkBox = new MyToolkit.CheckBox; //init checkbox
+ checkBox.setId("checkbox1");	//set id
+ checkBox.setText("Is this statement true");	//set text on 
+ checkBox.move(10,5);
+ checkBox.onclick(function(e){
+ 	console.log(e);
+ })
+ checkBox.onclick(function(e){
+ 	console.log(e);
+ });
 
-var progressBar = new MyToolkit.ProgressBar;
-progressBar.move(10,20);
-progressBar.changeProgressBarSize(400);
+ var progressBar = new MyToolkit.ProgressBar;
+ progressBar.move(10,5);
+ progressBar.setWidthOfBar(500);
+ progressBar.setIncrementBarValue(69);
 
-var progressBar1 = new MyToolkit.ProgressBar;
-progressBar1.move(102,20);
-progressBar1.changeProgressBarSize(300);
+ var value = progressBar.getIncrementBarValue()
+ console.log(value);
+
+var radio = new MyToolkit.RadioButton(3);
+// radio.setId("Radio 1", 1);
+// radio.setId("Radio 2",2)
+
+
+ // radio.setText("efe")
+ //console.log(radio[0].node.lastChild.lastChild.innerHTML = "r")
+ //radio[0].node.lastChild.lastChild.innerHTML = "r"
+ var textBox = new MyToolkit.TextBox;
+ textBox.move(5,5);
+ // textBox.setId("king");
+ // var text = document.querySelector("king");
+
+ var scroll = new MyToolkit.ScrollBar;
+ scroll.move(1,5)
+
+ var text = new MyToolkit.AddAComment;
+ text.move(1,40);
