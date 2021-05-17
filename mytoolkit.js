@@ -324,13 +324,13 @@ var MyToolkit = (function() {
         var list=[]; //list of radio buttons.
 
 
-        var height = number *40;
+        var height = number *50;
         var heightOfSVG = height.toString();
-        console.log(heightOfSVG)
+        //console.log(heightOfSVG)
         /*
-        Visually support checked and unchecked states.
+        Visually support checked and unchecked states. (IN PROGRESS)
 
-        Support 2 to n number of buttons, where n is set by the consuming code, with minimum of two, positioned vertically.
+        Support 2 to n number of buttons, where n is set by the consuming code, with minimum of two, positioned vertically. (DONE)
         
         Ensure that only one button can be checked at a time.
         
@@ -340,8 +340,18 @@ var MyToolkit = (function() {
         
         Expose an event handler that notifies consuming code when the widget state has changed.
         */  
+
+
+        //event handlers
+        var mouseOverHandler = null;
+        var mouseOutHandler = null;
+        var selectHandler = null;
+        var unselectHandler = null;
+
+
         if(number<2){
-            console.log("need 2 or more")
+            throw "please instantiate 2 or more radio buttons";
+            // alert("instantiate 2 or more")
         }
         var draw = SVG().addTo('body').size("100%",heightOfSVG); //build SVG space
 
@@ -350,30 +360,23 @@ var MyToolkit = (function() {
         //INPROGRESS: TRYING TO CREATE MULTIPLE RADIO BUTTONS
 
          //creating a group object for radio button
-         //var radioGroups = draw.group(); 
+         var radioSet = draw.group(); 
 
-        //  var radioGroup = draw.group();  
-        //  var outerCircle = radioGroup.circle(20).fill('none').stroke({color:'black'});
-        //  var innerCircle = radioGroup.circle(15).fill('white').move(2.5,2.5);
-        //  var text = radioGroup.text(" ").fill(BLUE).attr({"font-size": '20'}).x(30).y(-8);
-        //  text.stroke({color: BLUE, width: 1});
-
-         
-
-
-         //text.addTo(radioGroup);
-         for(var i = 0; i< number; i++){
-
-
-            var radioGroup = draw.group();  
+         //creating desired number of radion elements
+         for(var i = 1; i<= number; i++){
+            var radioGroup = radioSet.group();  
             var outerCircle = radioGroup.circle(20).fill('none').stroke({color:'black'});
             var innerCircle = radioGroup.circle(15).fill('white').move(2.5,2.5);
-            var text = radioGroup.text("enter text").fill(BLUE).attr({"font-size": '20'}).x(30).y(-8);
-            text.stroke({color: BLUE, width: 1});
+            var radioText = radioGroup.text("Radio " + (i)).fill(BLUE).attr({"font-size": '20'}).x(30).y(-4);
+            radioText.stroke({color: BLUE, width: 1});
+            var createSelectionSpace = radioGroup.rect(200,20)
+            .opacity(0).front();
             radioGroup.move(10,i*40)
 
-           
-            list.push(radioGroup)
+            radioGroup.data({
+               isChecked: false   
+           })
+            //list.push(radioGroup)
 
              //new RadioButton;
 
@@ -381,7 +384,7 @@ var MyToolkit = (function() {
         }
         
  
-        return list;
+    //return list;
         // list.each('fill','green');
         // console.log(list)
 
@@ -399,69 +402,123 @@ var MyToolkit = (function() {
 
         //Expose an event handler that notifies consuming code when the widget state has changed.
         var clickEvent = null
-        var isSelected = false;
 
 
-        innerCircle.mouseover(function(){
+
+        createSelectionSpace.mouseover(function(e){
             innerCircle.fill({color: BLUE})
+
+            if(mouseOverHandler != null){
+                mouseOverHandler(e);
+            }
 
             // checkMarkGroup.show();
         })
-        outerCircle.mouseout(function(){
-            if(isSelected){
+        createSelectionSpace.mouseout(function(){
+            if(radioGroup.data('isChecked') ===true){
                 innerCircle.fill({ color: BLUE})
 
             }
             else{
                 innerCircle.fill({ color: 'white'})
             }
+
+            if(mouseOutHandler != null){
+                mouseOutHandler(e);
+            }
             // checkMarkGroup.hide();
         })
-        outerCircle.mouseup(function(){
+        createSelectionSpace.mouseup(function(){
             innerCircle.fill({ color: BLUE})
-            isSelected = true;
+            //radioGroup.data({'isChecked':true})
+            
         })
-        radioGroup.mousedown(function(){
+        createSelectionSpace.mousedown(function(){
             innerCircle.fill({ color: HOVERBLUE})
-            isSelected = true;
+            //radioGroup.data({'isChecked':true})
+            
+            // isSelected = true;
 
         })
 
-    
         //captures click event from browser
-        radioGroup.click(function(event){
+        createSelectionSpace.click(function(e){
             // this.fill({ color: 'black'}))
 
+            // console.log( radioSet.get(1).node)
+
+            radioSelected(radioGroup);
             innerCircle.fill({color: BLUE})
     
-            isSelected = true;
+            //radioGroup.data({'isChecked':true})
+            //isSelected = true;
 
-    
+            //console.log(e.target.previousElementSibling.previousElementSibling)
             console.log("radio clicked");
         })
 
+        function radioSelected(radioButton){
+
+            //console.log(radioButton.node)
+            //console.log(radioSet.get(1).node.get(1))
+
+            //clear all selections
+            // for (var i = 0; i< number; i++) {
+            //     radioSet.get(i).node
+                
+            // }
+            //then update
 
 
+
+
+
+            //updated state of button to selected
+            var updateState = !(radioButton.data('isChecked'));
+            radioButton.data('isChecked',updateState);
+
+            //if selected fill
+            if(updateState ===true){
+                //fill
+                innerCircle.fill(BLUE)
+            }
+
+            //else deselect
+
+
+
+
+            //console.log(updateState)
+
+            //newly selected
+
+        }
          return {
-            move: function(x, y) {
-                radioGroup.move(x, y);
+            move: function(x, y,elem) {
+                var radioButton = radioSet.get(elem);
+                radioButton.move(x, y);
             },
             onclick: function(eventHandler){
                 clickEvent = eventHandler
                 console.log("button clicked");
             },
-            setId: function(id){
-                radioGroup.attr("id", id);
+            setId: function(id,elem){
+                var radioButton = radioSet.get(elem-1);
+                radioButton.attr("id", id);
             },
-            // setText: function(userText,elementNumber){
-            //     //list[elementNumber].node.lastChild.lastChild.innerHTML = userText
 
-            //     radioGroup.text.text(userText)
-            //     //this.lastChild.key = userText
-                
-            // },
-            setText: function(text){
-                list[0].node.lastChild.lastChild.innerHTML = "r"
+            setText: function(text, elem){
+                //list[0].node.lastChild.lastChild.innerHTML = "r"
+
+                //grab specific radio button
+                var radioButton = radioSet.get(elem-1);
+                //console.log(radioButton);
+                var radioText = radioButton.get(2); //cir-cir-text
+                radioText.text(text);
+                //console.log(radioButton);
+            },
+            mouseOver: function(e){
+
             }
             
         }
@@ -627,6 +684,8 @@ var MyToolkit = (function() {
 
     var AddAComment = function(){
 
+
+
         var clickEvent = null;
         var userComment = "";
 
@@ -636,7 +695,7 @@ var MyToolkit = (function() {
         //1.box with comment text
         //creating a group object for button
         var buttonGroup = draw.group();  
-        var rect = buttonGroup.rect(100,40).fill('red').radius(10);
+        var rect = buttonGroup.rect(100,40).fill(BLUE).radius(10);
 
         //add text button
         var buttonText = buttonGroup.text("Comment").fill('white').attr({"font-size": '20'})
@@ -650,8 +709,39 @@ var MyToolkit = (function() {
         var text = textBoxGroup.text("placeholder").move(5,5);
         var caret = textBoxGroup.line(45,2.5,45,25).stroke({width:1,color:"black"}).move(80,5)
         textBoxGroup.move(100,40)
+        textBoxGroup.hide()
         //4. on click -> box goes away and text box appears to add text.
         
+        rect.mouseover(function(){
+            this.fill({ color: HOVERBLUE})
+            
+        })
+        rect.mouseout(function(){
+            this.fill({ color: BLUE})
+            this.stroke('none')
+        })
+        rect.mousedown(function(){
+            this.fill({ color: HOVERBLUE })
+        })
+        //captures click event from browser
+        rect.click(function(event){
+            if(textBoxGroup.visible()){
+                textBoxGroup.hide()
+            }
+            else{
+                textBoxGroup.show()
+
+            }
+
+            rect.fill({ color: YELLOW})
+            this.stroke({color: FOCUSCOLOR, width:'4'} )
+            if(clickEvent != null)
+                clickEvent(event)
+
+            //textBoxGroup.show()
+        })
+
+
         //     //captures click event from browser
         textBoxGroup.click(function(event){
             outerRect.fill({ color: 'gray'})
@@ -670,6 +760,56 @@ var MyToolkit = (function() {
             // })
 
         })
+         //for characters only
+         SVG.on(window,'keypress',function(e){
+            logKey(e);
+        })
+
+        //for backspace and shift only
+        SVG.on(window,'keydown',function(e){
+            if(e.key === "backspace" || e.key === "shift"){
+                console.log("here");
+                
+            }
+            modifyText(e)
+        })
+
+
+
+    
+
+       
+    // function userInput(event){
+    //     var text;
+    //     // text += event.value.text;
+    //     console.log(text);
+    // }
+
+    function logKey(e){
+
+
+
+        // if(userComment.length > outerRect.siz ){
+        //     console.log("huhf3")
+        // }
+        //userComment = userComment + e.key 
+        var editedText = userComment + e.key;
+        userComment = editedText;
+        //console.log(userComment);
+        text.text(userComment);
+
+        //console.log(txt.key);
+
+    }
+    function modifyText(e){
+        if(e.key === "Backspace" ){
+            console.log("backspace")
+            var editedText = userComment.slice(0,-1);
+            userComment = editedText;
+            text.text(userComment);
+            //console.log(userComment);
+        }
+    }
 
         function updateText(txt){
 
