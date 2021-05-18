@@ -1,100 +1,144 @@
 // File name: mytoolkit.js
 import { SVG } from './svg.min.js'
 
-var MyToolkit = (function() {
+var MyToolkit = (function () {
 
     //COLOR SCHEME PALLET
     var BLUE = '#004571';
     var YELLOW = '#f6aa0d';
-    
+
     var HOVERBLUE = '#00386c';
     var HOVERYELLOW = '#DF9336';
 
     var FOCUSCOLOR = '#5e9ed6'; //color: FOCUSCOLOR, width:'4'
 
+    /**
+     * @class Button
+     */
+    var Button = function () {
 
-    var Button = function(){
+        /*
+            Visually change for at least three states (e.g., color change on hover). (DONE)
+    
+            Expose a custom label property to set the text on the button.(DONE)
+            
+            Expose an event handler that notifies consuming code when the button is clicked.(DONE)
+            
+            Expose an event handler that notifies consuming code when the widget state has changed.(DONE)
+    
+        */
 
-    /*
-        Visually change for at least three states (e.g., color change on hover). (DONE)
-
-        Expose a custom label property to set the text on the button.(DONE)
-        
-        Expose an event handler that notifies consuming code when the button is clicked.
-        
-        Expose an event handler that notifies consuming code when the widget state has changed.
-
-    */
         var xDimmension = 200;
         var yDimmension = 50;
 
         //creating SVG
         //build SVG with fill
-        var draw = SVG().addTo('body').size('100%','100%'); //build SVG space
+        var draw = SVG().addTo('body').size('100%', '100%'); //build SVG space
 
         //creating a group object for button
-        var buttonGroup = draw.group();  
-        var rect = buttonGroup.rect(200,50).fill(BLUE).radius(10);
+        var buttonGroup = draw.group();
+        var rect = buttonGroup.rect(200, 50).fill(BLUE).radius(10);
 
         //add text button
-        var text = buttonGroup.text("Button:").fill('white').attr({"font-size": '20'})
-        .cx(90).cy(25);
+        var text = buttonGroup.text("Button:").fill('white').attr({ "font-size": '20' })
+            .cx(90).cy(25);
 
         text.addTo(buttonGroup);
 
-        
+
         // text.addTo(buttonGroup);
 
         //Expose an event handler that notifies consuming code when the widget state has changed.
-        var clickEvent = null
+        //var clickEvent = null
+
+        //handlers
+        var mouseoverHandler, mouseoutHandler, mousedownHandler, pressedHandler = null;
 
         //(A) visually change for at least three states 
         //(D) Expose an event handler that notifies consuming code when the widget state has changed.
-        rect.mouseover(function(){
-            this.fill({ color: HOVERBLUE})
-            
-        })
-        rect.mouseout(function(){
-            this.fill({ color: BLUE})
-            this.stroke('none')
-        })
-        rect.mousedown(function(){
+        rect.mouseover(function (event) {
             this.fill({ color: HOVERBLUE })
+
+            if (mouseoverHandler != null) {
+                mouseoverHandler(event)
+            }
+
+        })
+        rect.mouseout(function (event) {
+            this.fill({ color: BLUE })
+            this.stroke('none')
+
+            if (mouseoutHandler != null) {
+                mouseoutHandler(event)
+            }
+        })
+        rect.mousedown(function (event) {
+            this.fill({ color: HOVERBLUE })
+
+            if (mousedownHandler != null) {
+                mousedownHandler(event)
+            }
+
         })
         //captures click event from browser
-        rect.click(function(event){
-            this.fill({ color: YELLOW})
-            this.stroke({color: FOCUSCOLOR, width:'4'} )
-            if(clickEvent != null)
-                clickEvent(event)
+        rect.click(function (event) {
+            this.fill({ color: YELLOW })
+            this.stroke({ color: FOCUSCOLOR, width: '4' })
+            if (pressedHandler != null) {
+                pressedHandler(event)
+            }
 
-                alert("YOU CLICKED ME")
-            console.log("button clicked");
         })
         //on intantiation, these fire off.
         return {
-            move: function(x, y) {
+
+            /**
+             * 
+             * Move object
+             * 
+             * @param  {number} x - is a horizontal value
+             * @param  {number} y - is a vertical value
+             */
+            move: function (x, y) {
                 buttonGroup.move(x, y);
             },
-
-            //(C): Expose an event handler that notifies consuming code when the button is clicked.
-            onclick: function(eventHandler){
-                clickEvent = eventHandler
+            /** Listener for mouse over behavior
+             * @param  {any} event - is a user's Mouse Event
+             */
+            onMouseOver: function (event) {
+                mouseoverHandler = event;
+            },
+            /** Listener for mouse out behavior
+             * @param  {any} event - is a user's Mouse Event
+             */
+            onMouseOut: function (event) {
+                mouseoutHandler = event;
+            },
+            /** Listener for mouse press-down behavior
+             * @param  {any} event - is a user's Mouse Event
+             */
+            onMouseDown: function (event) {
+                mousedownHandler = event;
+            },
+            /** Listener for mouse click behavior
+             * @param  {any} event - is a user's Mouse Event
+             */
+            onClick: function (event) {
+                pressedHandler = event;
                 //console.log("button clicked");
             },
 
-            
-            //IN PROGRESS(B): Expose a custom label property to set the text on the button.
-            // Providing a more dynamic experience when adding text.
-
-            setText: function(userText){
+            /** Set the text on the button.
+             * @param  {String} userText - is a user's desired text
+             */
+            setText: function (userText) {
 
                 //(A)
                 // if(userText.length > 10){
 
                 //     var firstHalf = userText.slice(0, userText.length/2);
                 //     var secondHalf = userText.slice(firstHalf.length, userText.length);
-                    
+
                 //     text.build(true); //enabled build mode
 
                 //     var tspan = text.tspan(firstHalf).newLine();
@@ -104,177 +148,225 @@ var MyToolkit = (function() {
                 //     text.tspan.tspan(secondHalf).newLine();
                 // }
                 text.text(userText);
-                text.attr({'label': userText});
-                
+                text.attr({ 'label': userText });
+
             },
-            setId: function(id){
+            /** Set the identifier for the button.
+             * @param  {String} id - is a user's desired name 
+             */
+            setId: function (id) {
                 rect.attr("id", id);
             }
         }
     }//Button
-        
-    var CheckBox = function(){
 
-    /*
-    Visually support checked and unchecked states. (DONE)
+    /**
+     * @class CheckBox
+     */
+    var CheckBox = function () {
 
-    Expose a custom label property to set the text that appears to the right of the check box.(DONE)
+        /*
+        Visually support checked and unchecked states. (DONE)
+    
+        Expose a custom label property to set the text that appears to the right of the check box.(DONE)
+    
+        Expose an event handler that notifies consuming code when the checked state has changed. (DONE)
+    
+        Expose an event handler that notifies consuming code when the widget state has changed. (DONE)
+        */
 
-    Expose an event handler that notifies consuming code when the checked state has changed.
+        var xDimmension = 200;
+        var yDimmension = 50;
 
-    Expose an event handler that notifies consuming code when the widget state has changed.
-    */
+        //creating SVG
 
-    var xDimmension = 200;
-    var yDimmension = 50;
+        //build SVG with fill
+        var draw = SVG().addTo('body').size('100%', '100%'); //build SVG space
 
-    //creating SVG
+        //creating a group object for checkbox
+        var checkBoxGroup = draw.group();
+        var rect = checkBoxGroup.rect(25, 25).fill('white').radius(5);
+        rect.attr({ padding: '50px 50px' })
+        var stroke = checkBoxGroup.stroke({ color: 'gray', width: 2 });
+        //adding checkmark design
+        var checkMarkGroup = draw.group();
+        var downLine = checkMarkGroup.line(0, 0, 5, 5).move(10, 20);
+        downLine.stroke({ color: YELLOW, width: 5, linecap: 'round', padding: '20px 20px' })
+        var upLine = checkMarkGroup.line(10, -10, 0, 0).move(15, 15);
+        upLine.stroke({ color: YELLOW, width: 5, linecap: 'round', padding: '10px 10px' })
+        checkMarkGroup.attr({ padding: '100px 50px' })
+        checkMarkGroup.addTo(checkBoxGroup);
+        checkMarkGroup.move(5, 7);
+        checkMarkGroup.hide();
+        var isChecked = false; //initialized to false
 
-    //build SVG with fill
-    var draw = SVG().addTo('body').size('100%','100%'); //build SVG space
-
-    //creating a group object for checkbox
-    var checkBoxGroup = draw.group();  
-    var rect = checkBoxGroup.rect(25,25).fill('white').radius(5);
-    rect.attr({padding: '50px 50px'})
-    var stroke = checkBoxGroup.stroke({color: 'gray', width: 2});
-    //adding checkmark design
-    var checkMarkGroup = draw.group();
-    var downLine = checkMarkGroup.line(0,0,5,5).move(10,20);
-    downLine.stroke({ color: YELLOW, width: 5, linecap: 'round',padding:'20px 20px'})
-    var upLine = checkMarkGroup.line(10,-10,0,0).move(15,15);
-    upLine.stroke({ color: YELLOW, width: 5, linecap: 'round', padding:'10px 10px' })
-    checkMarkGroup.attr({padding:'100px 50px'})
-    checkMarkGroup.addTo(checkBoxGroup);
-    checkMarkGroup.move(5,7);
-    // checkMarkGroup.hide();
-
-    //add text button
-    var text = checkBoxGroup.text("Text").fill(BLUE).attr({"font-size": '20'}).x(30).y(0);
-    text.stroke({color: BLUE, width: 1});
-    text.addTo(checkBoxGroup);
+        //add text button
+        var text = checkBoxGroup.text("Text").fill(BLUE).attr({ "font-size": '20' }).x(30).y(0);
+        text.stroke({ color: BLUE, width: 1 });
+        text.addTo(checkBoxGroup);
 
 
-    //PROCESSING BEGINS
+        //event handelers
+        var mouseoverHandler, mouseoutHandler, mouseupHandler, mousedownHandler, checkedHandler, uncheckedHandler = null;
 
-    //Expose an event handler that notifies consuming code when the widget state has changed.
-    var clickEvent = null
-    var isChecked = false;
 
-    //(A) visually change for at least three states 
-    //(D) Expose an event handler that notifies consuming code when the widget state has changed.
-    rect.mouseover(function(){
-        this.fill({ color: HOVERBLUE})
-        // checkMarkGroup.show();
-    })
-    rect.mouseout(function(){
-        this.fill({ color: 'white'})
-        // checkMarkGroup.hide();
-    })
-    rect.mouseup(function(){
-        this.fill({ color: 'none'})
-    })
 
-    //captures click event from browser
-    rect.click(function(event){
-        // this.fill({ color: 'black'})
 
-        console.log(event)
-        
-        if(clickEvent != null){
-            clickEvent(event)
+        rect.mouseover(function (event) {
+            this.fill({ color: HOVERBLUE })
+
+            if (mouseoverHandler != null) {
+                mouseoverHandler(event)
+            }
+            // checkMarkGroup.show();
+        })
+        rect.mouseout(function (event) {
+            this.fill({ color: 'none' })
+
+            if (mouseoutHandler != null) {
+                mouseoutHandler(event)
+            }
+            // checkMarkGroup.hide();
+        })
+        rect.mouseup(function (event) {
+            this.fill({ color: 'none' })
+
+            if (mouseupHandler != null) {
+                mouseupHandler(event)
+            }
+
+        })
+        rect.mousedown(function (event) {
+            this.fill({ color: HOVERBLUE })
+
+            if (mousedownHandler != null) {
+                mousedownHandler(event)
+            }
+        })
+
+        //captures click event from browser
+        rect.click(function (event) {
+            // this.fill({ color: 'black'})
+
+            //on action change state prior to processessing.
+            isChecked = !isChecked;
+
+
+            //state management and checkmark visibility status
+
+            //if checked and handler isn't null -> feed CheckedHandler. 
+            if (isChecked == true && checkedHandler != null) {
+                checkedHandler(event);
+                checkMarkGroup.show();
+            }
+
+            //otherwise unchecked and handler isn't null -> feed unCheckedHandler. 
+            else if(!isChecked && uncheckedHandler) {
+                uncheckedHandler(event);
+                checkMarkGroup.hide();
+            }
+
+
+        })
+
+
+
+        //on intantiation, these fire off.
+        return {
+            /**
+             * Move object
+             * 
+             * @param  {number} x - is a horizontal value
+             * @param  {number} y - is a vertical value
+             */
+            move: function (x, y) {
+                checkBoxGroup.move(x, y);
+            },
+
+            //(C): Expose an event handler that notifies consuming code when the button is clicked.
+            onclick: function (event) {
+                pressedHandler = event
+
+            },
+            onMouseOver: function (event) {
+                mouseoverHandler = event;
+            },
+            /** Listener for mouse out behavior
+             * @param  {any} event - is a user's Mouse Event
+             */
+            onMouseOut: function (event) {
+                mouseoutHandler = event;
+            },
+            /** Listener for mouse press-up behavior
+             * @param  {any} event - is a user's Mouse Event
+             */
+            onMouseUp: function (event) {
+                mouseupHandler = event;
+            },
+            onMouseDown: function (event) {
+                mousedownHandler = event;
+            },
+            /** Listener for mouse click behavior
+             * @param  {any} event - is a user's Mouse Event
+             */
+            onCheck: function (event) {
+                checkedHandler = event;
+            },
+            onUnCheck: function (event) {
+                uncheckedHandler = event;
+            },
+            setText: function (userText) {
+                text.text(userText);
+            },
+            setId: function (id) {
+                checkBoxGroup.attr("id", id);
+            }
         }
-        if(checkMarkGroup.visible()){
-            checkMarkGroup.hide();
-            isChecked = false;
-        }
-        else if(!checkMarkGroup.visible()){
-            checkMarkGroup.show();
-            isChecked = true;
-
-        }
-
-        console.log("checkbox clicked");
-    })
-    checkMarkGroup.click(function(event){
-        // this.fill({ color: 'black'})
-        
-        // if(clickEvent != null){
-        //     clickEvent(event)
-        // }
-        if(checkMarkGroup.visible())
-            checkMarkGroup.hide();
-        else{
-            checkMarkGroup.show();
-        }
-
-        console.log("checkbox clicked");
-    })
-
-
-    //on intantiation, these fire off.
-    return {
-        move: function(x, y) {
-            checkBoxGroup.move(x, y);
-        },
-
-        //(C): Expose an event handler that notifies consuming code when the button is clicked.
-        onclick: function(eventHandler){
-            clickEvent = eventHandler
-            console.log("button clicked");
-        },
-        setText: function(userText){
-            text.text(userText);
-        },
-        setId: function(id){
-            checkBoxGroup.attr("id", id);
-        }
-    }
     }//Button
 
-    var ProgressBar = function(){
-    /*     
-        
-        Expose a custom property to set the width of the progress bar. (DONE)
+    var ProgressBar = function () {
+        /*     
+            
+            Expose a custom property to set the width of the progress bar. (DONE)
+    
+            Expose a custom property to set the increment value of the progress bar. (DONE)
+    
+            Expose a custom property to get the increment value of the progress bar. (DONE)
+    
+            Expose a custom method to increment the value of the progress bar. The method should support an arbitrary numerical value from 0-100. (DONE)
+    
+            Expose an event handler that notifies consuming code when the progress bar has incremented.
+    
+            Expose an event handler that notifies consuming code when the widget state has changed.
+                    
+        */
 
-        Expose a custom property to set the increment value of the progress bar. (DONE)
+        //object variables
+        var WIDTH, PROGRESSBARVALUE;
+        var barHasIncremented, widgetHasIncremented = false;
 
-        Expose a custom property to get the increment value of the progress bar. (DONE)
+        //creating SVG space
+        var draw = SVG().addTo('body').size('100%', '100%');
 
-        Expose a custom method to increment the value of the progress bar. The method should support an arbitrary numerical value from 0-100. (DONE)
+        //creating progress bar grouping/design
+        var progressBarGroup = draw.group();
 
-        Expose an event handler that notifies consuming code when the progress bar has incremented.
+        var outerRect = progressBarGroup.rect(200, 30).stroke('black')
+            .radius(10).fill('none');
+        var innerRect = progressBarGroup.rect(0, 30).radius(10).fill(BLUE);
 
-        Expose an event handler that notifies consuming code when the widget state has changed.
-                
-    */
-
-    //object variables
-    var WIDTH, PROGRESSBARVALUE;
-    var barHasIncremented, widgetHasIncremented = false;
-
-    //creating SVG space
-    var draw = SVG().addTo('body').size('100%', '100%');
-
-    //creating progress bar grouping/design
-    var progressBarGroup = draw.group();
-
-        var outerRect = progressBarGroup.rect(200,30).stroke('black')
-        .radius(10).fill('none');
-        var innerRect = progressBarGroup.rect(0,30).radius(10).fill(BLUE);
-        
         return {
-            move: function(x, y) {
+            move: function (x, y) {
                 progressBarGroup.move(x, y);
             },
-    
+
             //(C): Expose an event handler that notifies consuming code when the button is clicked.
-            onclick: function(eventHandler){
+            onclick: function (eventHandler) {
                 clickEvent = eventHandler
                 console.log("button clicked");
             },
-            
-            setWidthOfBar: function(width){
+
+            setWidthOfBar: function (width) {
                 WIDTH = width;
                 outerRect.attr("width", width);
 
@@ -291,14 +383,14 @@ var MyToolkit = (function() {
 
             //     }
             //using percentages
-            setIncrementBarValue: function(zeroThroughHundredValue){
-                var argumentInPercentage = zeroThroughHundredValue/100;
+            setIncrementBarValue: function (zeroThroughHundredValue) {
+                var argumentInPercentage = zeroThroughHundredValue / 100;
                 var portionOfBar = argumentInPercentage * WIDTH;
 
-                if(zeroThroughHundredValue > 100){
+                if (zeroThroughHundredValue > 100) {
                     alert("value exceeds 100. Enter a value 0-100.")
                 }
-                else{
+                else {
                     //innerRect.size(zeroThroughHundredValue,30).radius(10);
 
                     // var percentageOfWidth = (zeroThroughHundredValue/WIDTH)*WIDTH;
@@ -309,22 +401,22 @@ var MyToolkit = (function() {
 
                 }
             },
-            getIncrementBarValue: function(){
+            getIncrementBarValue: function () {
                 return PROGRESSBARVALUE;
             },
-            setId: function(id){
+            setId: function (id) {
                 progressBarGroup.attr("id", id);
             }
-            
+
         }
 
     }
 
-    var RadioButton = function(number){
-        var list=[]; //list of radio buttons.
+    var RadioButton = function (number) {
+        //var list = []; //list of radio buttons.
 
 
-        var height = number *50;
+        var height = number * 50;
         var heightOfSVG = height.toString();
         //console.log(heightOfSVG)
         /*
@@ -339,125 +431,129 @@ var MyToolkit = (function() {
         Expose an event handler that notifies consuming code when the checked state has changed and which n has been checked.
         
         Expose an event handler that notifies consuming code when the widget state has changed.
-        */  
+        */
 
 
-        //event handlers
-        var mouseOverHandler = null;
-        var mouseOutHandler = null;
-        var selectHandler = null;
-        var unselectHandler = null;
 
 
-        if(number<2){
+        if (number < 2) {
             throw "please instantiate 2 or more radio buttons";
             // alert("instantiate 2 or more")
         }
-        var draw = SVG().addTo('body').size("100%",heightOfSVG); //build SVG space
+        var draw = SVG().addTo('body').size("100%", heightOfSVG); //build SVG space
 
 
 
         //INPROGRESS: TRYING TO CREATE MULTIPLE RADIO BUTTONS
 
-         //creating a group object for radio button
-         var radioSet = draw.group(); 
+        //creating a group object for radio button
+        var radioSet = draw.group();
 
-         //creating desired number of radion elements
-         for(var i = 1; i<= number; i++){
-            var radioGroup = radioSet.group();  
-            var outerCircle = radioGroup.circle(20).fill('none').stroke({color:'black'});
-            var innerCircle = radioGroup.circle(15).fill('white').move(2.5,2.5);
-            var radioText = radioGroup.text("Radio " + (i)).fill(BLUE).attr({"font-size": '20'}).x(30).y(-4);
-            radioText.stroke({color: BLUE, width: 1});
-            var createSelectionSpace = radioGroup.rect(200,20)
-            .opacity(0).front();
-            radioGroup.move(10,i*40)
+        //creating desired number of radion elements
+        for (var i = 1; i <= number; i++) {
 
-            radioGroup.data({
-               isChecked: false   
-           })
-            //list.push(radioGroup)
+            //each radio will be in the set of radios
+            var radioButton = radioSet.group();
 
-             //new RadioButton;
+            //content of radio button will be in radio
+            var buttonContent = radioButton.group();
 
-             //  list[i].move(5,i*5)
-        }
-        
+            var outerCircle = buttonContent.circle(20).fill('none').stroke({ color: 'black' });
+            var innerCircle = buttonContent.circle(15).fill('white').move(2.5, 2.5);
+            var radioText = buttonContent.text("Radio " + (i)).fill(BLUE).attr({ "font-size": '20' }).x(30).y(-4);
+            radioText.stroke({ color: BLUE, width: 1 });
+            var createSelectionSpace = buttonContent.rect(200, 20)
+                .opacity(0).front();
+            radioButton.move(10, i * 40)
+
+            radioButton.data({
+                isChecked: false
+            })
  
-    //return list;
-        // list.each('fill','green');
-        // console.log(list)
+        }
 
-        //innerCircle.hide()
-         //standard init provides 2 radio buttons at minimum
-        //  function constructor(number){
-        //     var listOfButtons = [];
-        //      for (let index = 0; index < number; index++) {
-        //         listOfButtons.push(new RadioButton());
-                
-        //     }
-        //     return listOfButtons;
-        // }
-         
+        //return list;
 
-        //Expose an event handler that notifies consuming code when the widget state has changed.
-        var clickEvent = null
+        //event handlers
+        var mouseoverHandler, mouseoutHandler, mouseupHandler, mousedownHandler, checkedHandler, uncheckedHandler,clickEvent = null;
 
 
+        createSelectionSpace.mouseover(function (e) {
 
-        createSelectionSpace.mouseover(function(e){
-            innerCircle.fill({color: BLUE})
+            //check state of button
+        
 
-            if(mouseOverHandler != null){
+
+            innerCircle.fill({ color: BLUE })
+
+            if (mouseOverHandler != null) {
                 mouseOverHandler(e);
             }
 
             // checkMarkGroup.show();
         })
-        createSelectionSpace.mouseout(function(){
-            if(radioGroup.data('isChecked') ===true){
-                innerCircle.fill({ color: BLUE})
+        createSelectionSpace.mouseout(function (e) {
+            if (radioButton.data('isChecked') === true) {
+                innerCircle.fill({ color: BLUE })
 
             }
-            else{
-                innerCircle.fill({ color: 'white'})
+            else {
+                innerCircle.fill({ color: 'white' })
             }
 
-            if(mouseOutHandler != null){
+            if (mouseOutHandler != null) {
                 mouseOutHandler(e);
             }
             // checkMarkGroup.hide();
         })
-        createSelectionSpace.mouseup(function(){
-            innerCircle.fill({ color: BLUE})
-            //radioGroup.data({'isChecked':true})
-            
+        createSelectionSpace.mouseup(function (e) {
+            innerCircle.fill({ color: BLUE })
+            //radioButton.data({'isChecked':true})
+
+            if(mouseupHandler != null){
+                mouseupHandler(e);
+            }
+
         })
-        createSelectionSpace.mousedown(function(){
-            innerCircle.fill({ color: HOVERBLUE})
-            //radioGroup.data({'isChecked':true})
-            
+        createSelectionSpace.mousedown(function (e) {
+            innerCircle.fill({ color: HOVERBLUE })
+            //radioButton.data({'isChecked':true})
+
             // isSelected = true;
 
+            if(mousedownHandler != null){
+                mousedownHandler(e);
+            }
         })
 
         //captures click event from browser
-        createSelectionSpace.click(function(e){
+        createSelectionSpace.click(function (e) {
             // this.fill({ color: 'black'}))
 
             // console.log( radioSet.get(1).node)
 
-            radioSelected(radioGroup);
-            innerCircle.fill({color: BLUE})
-    
-            //radioGroup.data({'isChecked':true})
+            radioSelected(radioButton);
+            innerCircle.fill({ color: BLUE })
+
+            //radioButton.data({'isChecked':true})
             //isSelected = true;
 
             //console.log(e.target.previousElementSibling.previousElementSibling)
             console.log("radio clicked");
+
+             //if checked and handler isn't null -> feed CheckedHandler. 
+             if (radioButton.data('currentState') == false && checkedHandler != null) {
+
+            }
+
+            //otherwise unchecked and handler isn't null -> feed unCheckedHandler. 
+            else if(!isChecked && uncheckedHandler) {
+                uncheckedHandler(event);
+                checkMarkGroup.hide();
+            }
         })
 
-        function radioSelected(radioButton){
+        function radioSelected(radioButton) {
 
             //console.log(radioButton.node)
             //console.log(radioSet.get(1).node.get(1))
@@ -465,22 +561,21 @@ var MyToolkit = (function() {
             //clear all selections
             // for (var i = 0; i< number; i++) {
             //     radioSet.get(i).node
-                
+
             // }
             //then update
 
-
-
-
-
             //updated state of button to selected
             var updateState = !(radioButton.data('isChecked'));
-            radioButton.data('isChecked',updateState);
+            radioButton.data('isChecked', updateState);
 
             //if selected fill
-            if(updateState ===true){
+            if (updateState == true) {
                 //fill
                 innerCircle.fill(BLUE)
+            }
+            else{
+                innerCircle.fill('white');
             }
 
             //else deselect
@@ -493,38 +588,67 @@ var MyToolkit = (function() {
             //newly selected
 
         }
-         return {
-            move: function(x, y,elem) {
+
+    
+        return {
+            move: function (x, y, elem) {
                 var radioButton = radioSet.get(elem);
                 radioButton.move(x, y);
             },
-            onclick: function(eventHandler){
-                clickEvent = eventHandler
-                console.log("button clicked");
+            onclick: function (event) {
+                clickEvent = event
             },
-            setId: function(id,elem){
-                var radioButton = radioSet.get(elem-1);
+            setId: function (id, elem) {
+                var radioButton = radioSet.get(elem - 1);
                 radioButton.attr("id", id);
             },
-
-            setText: function(text, elem){
+            setText: function (text, elem) {
                 //list[0].node.lastChild.lastChild.innerHTML = "r"
 
                 //grab specific radio button
-                var radioButton = radioSet.get(elem-1);
+                var radioButton = radioSet.get(elem - 1);
                 //console.log(radioButton);
                 var radioText = radioButton.get(2); //cir-cir-text
                 radioText.text(text);
                 //console.log(radioButton);
             },
-            mouseOver: function(e){
 
-            }
-            
+            onclick: function (event) {
+                pressedHandler = event
+
+            },
+            onMouseOver: function (event) {
+                mouseoverHandler = event;
+            },
+            /** Listener for mouse out behavior
+             * @param  {any} event - is a user's Mouse Event
+             */
+            onMouseOut: function (event) {
+                mouseoutHandler = event;
+            },
+            /** Listener for mouse press-up behavior
+             * @param  {any} event - is a user's Mouse Event
+             */
+            onMouseUp: function (event) {
+                mouseupHandler = event;
+            },
+            onMouseDown: function (event) {
+                mousedownHandler = event;
+            },
+            /** Listener for mouse click behavior
+             * @param  {any} event - is a user's Mouse Event
+             */
+            onCheck: function (event) {
+                checkedHandler = event;
+            },
+            onUnCheck: function (event) {
+                uncheckedHandler = event;
+            },
+
         }
     }
 
-    var TextBox = function(){
+    var TextBox = function () {
 
         /*
         Visually support a caret | that informs the user about the position of the cursor. The caret should only be visually present when the widget has hover focus.
@@ -547,92 +671,92 @@ var MyToolkit = (function() {
 
         //creating textbox grouping/design
         var textBoxGroup = draw.group();
-        var outerRect = textBoxGroup.rect(200,30).stroke('black')
-        .radius(10).fill('white');
-        var text = textBoxGroup.text("").move(5,0);
+        var outerRect = textBoxGroup.rect(200, 30).stroke('black')
+            .radius(10).fill('white');
+        var text = textBoxGroup.text("").move(5, 0);
         //var caret = textBoxGroup.line(45,2.5,45,25).stroke({width:1,color:"black"}).move(80,5)
 
 
-    //     //captures click event from browser
-        textBoxGroup.click(function(event){
-        outerRect.fill({ color: 'gray'})
-        console.log(event);
-        
-        if(clickEvent != null){
-            clickEvent = event;
-        }
+        //     //captures click event from browser
+        textBoxGroup.click(function (event) {
+            outerRect.fill({ color: 'gray' })
+            //console.log(event);
 
-        //for characters only
-        SVG.on(window,'keypress',function(e){
-            logKey(e);
-        })
-
-        //for backspace and shift only
-        SVG.on(window,'keydown',function(e){
-            if(e.key === "backspace" || e.key === "shift"){
-                console.log("here");
-                
+            if (clickEvent != null) {
+                clickEvent = event;
             }
-            modifyText(e)
+
+            //for characters only
+            SVG.on(window, 'keypress', function (e) {
+                logKey(e);
+            })
+
+            //for backspace and shift only
+            SVG.on(window, 'keydown', function (e) {
+                if (e.key === "backspace" || e.key === "shift") {
+                    console.log("here");
+
+                }
+                modifyText(e)
+            })
+
+
+
         })
 
 
-
-    })
-
-       
-    // function userInput(event){
-    //     var text;
-    //     // text += event.value.text;
-    //     console.log(text);
-    // }
-
-    function logKey(e){
-
-
-
-        // if(USERTEXT.length > outerRect.siz ){
-        //     console.log("huhf3")
+        // function userInput(event){
+        //     var text;
+        //     // text += event.value.text;
+        //     console.log(text);
         // }
-        //userText = userText + e.key 
-        var editedText = USERTEXT + e.key;
-        USERTEXT = editedText;
-        //console.log(USERTEXT);
-        text.text(USERTEXT);
 
-        //console.log(txt.key);
+        function logKey(e) {
 
-    }
-    function modifyText(e){
-        if(e.key === "Backspace" ){
-            console.log("backspace")
-            var editedText = USERTEXT.slice(0,-1);
+
+
+            // if(USERTEXT.length > outerRect.siz ){
+            //     console.log("huhf3")
+            // }
+            //userText = userText + e.key 
+            var editedText = USERTEXT + e.key;
             USERTEXT = editedText;
-            text.text(USERTEXT);
             //console.log(USERTEXT);
+            text.text(USERTEXT);
+
+            //console.log(txt.key);
+
         }
-    }
-        
+        function modifyText(e) {
+            if (e.key === "Backspace") {
+                console.log("backspace")
+                var editedText = USERTEXT.slice(0, -1);
+                USERTEXT = editedText;
+                text.text(USERTEXT);
+                //console.log(USERTEXT);
+            }
+        }
+
 
         //methods
-        return{
-            move: function(x,y){
-                textBoxGroup.move(x,y);
+        return {
+            move: function (x, y) {
+                textBoxGroup.move(x, y);
             },
-            insertText: function(userText){
+            insertText: function (userText) {
                 text.text(userText);
 
             },
-            setId: function(id){
+            setId: function (id) {
                 textBoxGroup.attr("id", id);
             },
-            onClick: function(eventHandler){
+            onClick: function (eventHandler) {
                 clickEvent = eventHandler;
             }
         }
     }
 
-    var ScrollBar = function(){
+    var ScrollBar = function () {
 
         /*
         Expose a custom property to set the height of the scroll bar.
@@ -646,43 +770,43 @@ var MyToolkit = (function() {
         var HEIGHT;
 
         //creating SVG space
-        var draw = SVG().addTo('body').size('100%','100%');
+        var draw = SVG().addTo('body').size('100%', '100%');
 
         //design
         var scrollBarGroup = draw.group();
 
         //1.vertical rectangle
-        var outerRect = scrollBarGroup.rect(30,130).stroke('black')
-        .fill('none').radius;
+        var outerRect = scrollBarGroup.rect(30, 130).stroke('black')
+            .fill('none').radius;
 
         //2.two small squares at each end
-        var topRect = scrollBarGroup.rect(30,30).stroke('black')
-        .fill('none');
-        var topArrow = scrollBarGroup.polygon('50,0 60,20 40,20').move(6,4);
+        var topRect = scrollBarGroup.rect(30, 30).stroke('black')
+            .fill('none');
+        var topArrow = scrollBarGroup.polygon('50,0 60,20 40,20').move(6, 4);
 
-        var buttomRect = scrollBarGroup.rect(30,100).stroke('black')
-        .fill('none');
-        var bottomArrow = scrollBarGroup.polygon('50,20 60,0 40,0').move(6,105);
+        var buttomRect = scrollBarGroup.rect(30, 100).stroke('black')
+            .fill('none');
+        var bottomArrow = scrollBarGroup.polygon('50,20 60,0 40,0').move(6, 105);
 
         //3.eclipse for the dragger
-        var shifter = scrollBarGroup.rect(30, 30).move(0,30).stroke('black').fill('gray');
+        var shifter = scrollBarGroup.rect(30, 30).move(0, 30).stroke('black').fill('gray');
 
         //4.grip
-        var grip1 = scrollBarGroup.line(0,0,30,0).stroke({color:'black', width:2}).move(0,40)
-        var grip2 = scrollBarGroup.line(0,0,30,0).stroke({color:'black', width:2}).move(0,45)
-        var grip3 = scrollBarGroup.line(0,0,30,0).stroke({color:'black', width:2}).move(0,50)
+        var grip1 = scrollBarGroup.line(0, 0, 30, 0).stroke({ color: 'black', width: 2 }).move(0, 40)
+        var grip2 = scrollBarGroup.line(0, 0, 30, 0).stroke({ color: 'black', width: 2 }).move(0, 45)
+        var grip3 = scrollBarGroup.line(0, 0, 30, 0).stroke({ color: 'black', width: 2 }).move(0, 50)
 
-        return{
-            move: function(x,y){
-                scrollBarGroup.move(x,y);
+        return {
+            move: function (x, y) {
+                scrollBarGroup.move(x, y);
             },
-            setId: function(id){
+            setId: function (id) {
                 scrollBarGroup.attr("id", id);
             }
         }
     }
 
-    var AddAComment = function(){
+    var AddAComment = function () {
 
 
 
@@ -694,48 +818,48 @@ var MyToolkit = (function() {
 
         //1.box with comment text
         //creating a group object for button
-        var buttonGroup = draw.group();  
-        var rect = buttonGroup.rect(100,40).fill(BLUE).radius(10);
+        var buttonGroup = draw.group();
+        var rect = buttonGroup.rect(100, 40).fill(BLUE).radius(10);
 
         //add text button
-        var buttonText = buttonGroup.text("Comment").fill('white').attr({"font-size": '20'})
-        .move(10,8)
+        var buttonText = buttonGroup.text("Comment").fill('white').attr({ "font-size": '20' })
+            .move(10, 8)
 
         //3. text box on side
         //creating textbox grouping/design
         var textBoxGroup = draw.group();
-        var outerRect = textBoxGroup.rect(200,40).stroke('black')
-        .radius(10).fill('white');
-        var text = textBoxGroup.text("placeholder").move(5,5);
-        var caret = textBoxGroup.line(45,2.5,45,25).stroke({width:1,color:"black"}).move(80,5)
-        textBoxGroup.move(100,40)
+        var outerRect = textBoxGroup.rect(200, 40).stroke('black')
+            .radius(10).fill('white');
+        var text = textBoxGroup.text("placeholder").move(5, 5);
+        var caret = textBoxGroup.line(45, 2.5, 45, 25).stroke({ width: 1, color: "black" }).move(80, 5)
+        textBoxGroup.move(100, 40)
         textBoxGroup.hide()
         //4. on click -> box goes away and text box appears to add text.
-        
-        rect.mouseover(function(){
-            this.fill({ color: HOVERBLUE})
-            
+
+        rect.mouseover(function () {
+            this.fill({ color: HOVERBLUE })
+
         })
-        rect.mouseout(function(){
-            this.fill({ color: BLUE})
+        rect.mouseout(function () {
+            this.fill({ color: BLUE })
             this.stroke('none')
         })
-        rect.mousedown(function(){
+        rect.mousedown(function () {
             this.fill({ color: HOVERBLUE })
         })
         //captures click event from browser
-        rect.click(function(event){
-            if(textBoxGroup.visible()){
+        rect.click(function (event) {
+            if (textBoxGroup.visible()) {
                 textBoxGroup.hide()
             }
-            else{
+            else {
                 textBoxGroup.show()
 
             }
 
-            rect.fill({ color: YELLOW})
-            this.stroke({color: FOCUSCOLOR, width:'4'} )
-            if(clickEvent != null)
+            rect.fill({ color: YELLOW })
+            this.stroke({ color: FOCUSCOLOR, width: '4' })
+            if (clickEvent != null)
                 clickEvent(event)
 
             //textBoxGroup.show()
@@ -743,15 +867,15 @@ var MyToolkit = (function() {
 
 
         //     //captures click event from browser
-        textBoxGroup.click(function(event){
-            outerRect.fill({ color: 'gray'})
-            
-            if(clickEvent != null){
+        textBoxGroup.click(function (event) {
+            outerRect.fill({ color: 'gray' })
+
+            if (clickEvent != null) {
                 clickEvent = event;
             }
-            SVG.on(window,'keydown',function(e){
+            SVG.on(window, 'keydown', function (e) {
                 updateText(e);
-                
+
             })
             // SVG.on(window,'keydown',function(e){
             //     if(e.keycode == 8 || e.keycode == 46 ){
@@ -760,81 +884,81 @@ var MyToolkit = (function() {
             // })
 
         })
-         //for characters only
-         SVG.on(window,'keypress',function(e){
+        //for characters only
+        SVG.on(window, 'keypress', function (e) {
             logKey(e);
         })
 
         //for backspace and shift only
-        SVG.on(window,'keydown',function(e){
-            if(e.key === "backspace" || e.key === "shift"){
+        SVG.on(window, 'keydown', function (e) {
+            if (e.key === "backspace" || e.key === "shift") {
                 console.log("here");
-                
+
             }
             modifyText(e)
         })
 
 
 
-    
-
-       
-    // function userInput(event){
-    //     var text;
-    //     // text += event.value.text;
-    //     console.log(text);
-    // }
-
-    function logKey(e){
 
 
 
-        // if(userComment.length > outerRect.siz ){
-        //     console.log("huhf3")
+        // function userInput(event){
+        //     var text;
+        //     // text += event.value.text;
+        //     console.log(text);
         // }
-        //userComment = userComment + e.key 
-        var editedText = userComment + e.key;
-        userComment = editedText;
-        //console.log(userComment);
-        text.text(userComment);
 
-        //console.log(txt.key);
+        function logKey(e) {
 
-    }
-    function modifyText(e){
-        if(e.key === "Backspace" ){
-            console.log("backspace")
-            var editedText = userComment.slice(0,-1);
+
+
+            // if(userComment.length > outerRect.siz ){
+            //     console.log("huhf3")
+            // }
+            //userComment = userComment + e.key 
+            var editedText = userComment + e.key;
             userComment = editedText;
-            text.text(userComment);
             //console.log(userComment);
+            text.text(userComment);
+
+            //console.log(txt.key);
+
         }
-    }
+        function modifyText(e) {
+            if (e.key === "Backspace") {
+                console.log("backspace")
+                var editedText = userComment.slice(0, -1);
+                userComment = editedText;
+                text.text(userComment);
+                //console.log(userComment);
+            }
+        }
 
-        function updateText(txt){
+        function updateText(txt) {
 
-            if(txt.key == "Backspace" ){
+            if (txt.key == "Backspace") {
                 console.log('backspace is pressed')
                 //remove last character from string
             }
-            else if(txt.key == "ShiftLeft" || txt.key == "Shift") //if shift
-            console.log("shift pressed");
+            else if (txt.key == "ShiftLeft" || txt.key == "Shift") //if shift
+                console.log("shift pressed");
             // console.log("txt.key")
             // userComment += txt.key
             // text.text(userComment);
         }
 
-        return{
-            move: function(x,y){
-                buttonGroup.move(x,y);
+        return {
+            move: function (x, y) {
+                buttonGroup.move(x, y);
             },
-            setId: function(id){
+            setId: function (id) {
                 buttonGroup.attr("id", id);
             }
-            
+
         }
     }
-return {Button,CheckBox,ProgressBar,RadioButton,TextBox,ScrollBar,AddAComment}
+    return { Button, CheckBox, ProgressBar, RadioButton, TextBox, ScrollBar, AddAComment }
 }()); //end of tool kit
 
-export{MyToolkit}
+export { MyToolkit }

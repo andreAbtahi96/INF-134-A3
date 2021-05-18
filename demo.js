@@ -1,35 +1,62 @@
- //File name: demo.js
+//File name: demo.js
 
- import {MyToolkit} from './mytoolkit.js';
+import { MyToolkit } from './mytoolkit.js';
 
- // Implement a MyToolkit Button
+/* // Implement a MyToolkit Button
  var btn = new MyToolkit.Button;
- btn.setId("button1");
+
+ //set text
  btn.setText("Click Here");
+
+ //move
  btn.move(0,25);
- btn.onclick(function(e){
- 	console.log("entered demo version of onclick function");
- 	console.log(e);
+
+//event handlers
+ btn.onMouseOver(function(e){
+	  console.log("Button Hover!");
  });
 
- // var event = function(e){
- // 	console.log(e);
- // }
- // btn.onclick(event);
+ btn.onMouseOut(function(e){
+	console.log("Button Hover Out!");
+});
+ btn.onMouseDown(function(e){
+	console.log("Button Mouse Down!");
+});
+ btn.onClick(function(e){
+	console.log("Button Pressed!");
+});
+ 
 
 
- // Implement a MyToolkit Checkbx
- var checkBox = new MyToolkit.CheckBox; //init checkbox
- checkBox.setId("checkbox1");	//set id
- checkBox.setText("Is this statement true");	//set text on 
- checkBox.move(10,5);
- checkBox.onclick(function(e){
- 	console.log(e);
- })
- checkBox.onclick(function(e){
- 	console.log(e);
- });
+// init a checkbox
+var checkBox = new MyToolkit.CheckBox;
 
+//expose a custom labelm property to set the text
+checkBox.setText("CheckBox");
+
+checkBox.move(10, 5);
+
+//event handlers
+checkBox.onMouseOver(function (e) {
+	console.log("Checkbox Hover!");
+});
+checkBox.onMouseOut(function (e) {
+	console.log("Checkbox Hover Out!");
+});
+checkBox.onMouseUp(function (e) {
+	console.log("Checkbox Mouse Up!");
+});
+checkBox.onMouseDown(function (e) {
+	console.log("Checkbox Mouse Down!");
+});
+checkBox.onCheck(function (e) {
+	console.log("Checkbox Checked!");
+});
+checkBox.onUnCheck(function (e) {
+	console.log("Checkbox UnChecked!");
+});
+ */
+/*
  var progressBar = new MyToolkit.ProgressBar;
  progressBar.move(10,5);
  progressBar.setWidthOfBar(500);
@@ -37,15 +64,42 @@
 
  var value = progressBar.getIncrementBarValue()
  console.log(value);
+*/
 
-var radio = new MyToolkit.RadioButton(3);
-// radio.setId("Radio 1", 1);
-// radio.setId("Radio 2",2)
+//support 2 or more buttons
+var setOfRadios = new MyToolkit.RadioButton(5);
 
+//expose text on right of radio 
+
+for (let index = 0; index < 5; index++) {
+	setOfRadios.radioSet.setText("Radio",index + 1)	
+}
+
+//event handlers
+setOfRadios.onMouseOver(function (e) {
+	console.log("Radio Hover!");
+});
+setOfRadios.onMouseOut(function (e) {
+	console.log("Radio Hover Out!");
+});
+setOfRadios.onMouseUp(function (e) {
+	console.log("Radio Mouse Up!");
+});
+setOfRadios.onMouseDown(function (e) {
+	console.log("Radio Mouse Down!");
+});
+setOfRadios.onCheck(function (e) {
+	console.log("Radio Checked!");
+});
+setOfRadios.onUnCheck(function (e) {
+	console.log("Radio UnChecked!");
+});
 
  // radio.setText("efe")
  //console.log(radio[0].node.lastChild.lastChild.innerHTML = "r")
  //radio[0].node.lastChild.lastChild.innerHTML = "r"
+
+ /*
  var textBox = new MyToolkit.TextBox;
  textBox.move(5,5);
  // textBox.setId("king");
@@ -55,4 +109,5 @@ var radio = new MyToolkit.RadioButton(3);
  scroll.move(1,5)
 
  var text = new MyToolkit.AddAComment;
- text.move(1,40);
+ text.move(1,40); 
+ */
