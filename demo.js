@@ -2,7 +2,7 @@
 
 import { MyToolkit } from './mytoolkit.js';
 
-/* // Implement a MyToolkit Button
+// Implement a MyToolkit Button
  var btn = new MyToolkit.Button;
 
  //set text
@@ -55,8 +55,8 @@ checkBox.onCheck(function (e) {
 checkBox.onUnCheck(function (e) {
 	console.log("Checkbox UnChecked!");
 });
- */
-/*
+ 
+
  var progressBar = new MyToolkit.ProgressBar;
  progressBar.move(10,5);
  progressBar.setWidthOfBar(500);
@@ -64,7 +64,7 @@ checkBox.onUnCheck(function (e) {
 
  var value = progressBar.getIncrementBarValue()
  console.log(value);
-*/
+
 
 //support 2 or more buttons
 var setOfRadios = new MyToolkit.RadioButton(5);
@@ -99,7 +99,7 @@ setOfRadios.onUnCheck(function (e) {
  //console.log(radio[0].node.lastChild.lastChild.innerHTML = "r")
  //radio[0].node.lastChild.lastChild.innerHTML = "r"
 
- /*
+ 
  var textBox = new MyToolkit.TextBox;
  textBox.move(5,5);
  // textBox.setId("king");
@@ -110,4 +110,4 @@ setOfRadios.onUnCheck(function (e) {
 
  var text = new MyToolkit.AddAComment;
  text.move(1,40); 
- */
+
