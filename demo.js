@@ -71,9 +71,9 @@ var setOfRadios = new MyToolkit.RadioButton(5);
 
 //expose text on right of radio 
 
-for (let index = 0; index < 5; index++) {
-	//setOfRadios.radioSet.setText("Radio",index + 1)	
-}
+// for (let index = 0; index < 5; index++) {
+// 	//setOfRadios.radioSet.setText("Radio",index + 1)	
+// }
 
 //event handlers
 setOfRadios.onMouseOver(function (e) {
