@@ -2,6 +2,7 @@
 
 import { MyToolkit } from './mytoolkit.js';
 
+
 // Implement a MyToolkit Button
  var btn = new MyToolkit.Button;
 
@@ -25,7 +26,7 @@ import { MyToolkit } from './mytoolkit.js';
  btn.onClick(function(e){
 	console.log("Button Pressed!");
 });
- 
+
 
 
 // init a checkbox
@@ -55,15 +56,25 @@ checkBox.onCheck(function (e) {
 checkBox.onUnCheck(function (e) {
 	console.log("Checkbox UnChecked!");
 });
+
  
+
 
  var progressBar = new MyToolkit.ProgressBar;
  progressBar.move(10,5);
- progressBar.setWidthOfBar(500);
- progressBar.setIncrementBarValue(69);
 
- var value = progressBar.getIncrementBarValue()
- console.log(value);
+ 
+ progressBar.setWidthOfBar(100);
+
+//increment by user amount and notify consuming code of change.
+ progressBar.setIncrementValue(10);
+ progressBar.setIncrementValue(50);
+ 
+
+console.log("Increment value is: " + progressBar.getIncrementValue().toString());
+console.log("Total progress bar value: " + progressBar.getTotalBarValue().toString);
+
+
 
 
 //support 2 or more buttons
@@ -78,6 +89,8 @@ var setOfRadios = new MyToolkit.RadioButton(5);
 // 	//setOfRadios.radioSet.setText("Radio",index + 1)	
 
 // }
+
+
 
 //event handlers
 setOfRadios.onMouseOver(function (e) {
@@ -104,14 +117,70 @@ setOfRadios.onUnCheck(function (e) {
  //radio[0].node.lastChild.lastChild.innerHTML = "r"
 
  
+
  var textBox = new MyToolkit.TextBox;
  textBox.move(5,5);
- // textBox.setId("king");
- // var text = document.querySelector("king");
+ 
+ textBox.mouseDown(function(e){
+	 console.log("Text Box pressed down")
+ })
+
+ textBox.mouseUp(function(e){
+	 console.log("Text Box pressed up")
+ })
+
+ textBox.mouseOver(function(e){
+	 console.log("Text Box Mouse Over")
+ })
+ textBox.mouseOut(function(e){
+	console.log("Text Box Mouse Out")
+})
+ textBox.textChange(function(e){
+	 console.log("Text changed!");
+ })
+
+ 
+
+
 
  var scroll = new MyToolkit.ScrollBar;
  scroll.move(1,5)
 
- var text = new MyToolkit.AddAComment;
- text.move(1,40); 
+ var comment = new MyToolkit.AddAComment;
+ comment.move(5,40); 
+
+ 
+ 
+ comment.mousedown(function(e){
+	 console.log("Comment Box pressed down")
+ })
+
+ comment.mouseup(function(e){
+	 console.log("Comment Box pressed up")
+ })
+
+ comment.mouseover(function(e){
+	 console.log("Comment Box Mouse Over")
+ })
+ comment.mouseout(function(e){
+	console.log("Comment Box Mouse Out")
+})
+ comment.textChange(function(e){
+	 console.log("Comment changed!");
+ })
+
+var toggleSwitch = new MyToolkit.ToggleSwitch;
+toggleSwitch.move(5,0);
+
+toggleSwitch.toggleOn(function(e){
+	console.log("Toggle is ON!");
+})
+
+toggleSwitch.toggleOff(function(e){
+	console.log("Toggle is OFF!");
+	
+})
+
+ // comment.setId("king");
+ // var text = document.querySelector("king");
 
