@@ -13,6 +13,7 @@ var MyToolkit = (function () {
     var FOCUSCOLOR = '#5e9ed6'; //color: FOCUSCOLOR, width:'4'
 
     /**
+     * ![alternate text](images/button.png)
      * @class Button
      */
     var Button = function () {
