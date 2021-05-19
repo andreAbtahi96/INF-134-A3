@@ -117,7 +117,6 @@ setOfRadios.onUnCheck(function (e) {
  //radio[0].node.lastChild.lastChild.innerHTML = "r"
 
  
-
  var textBox = new MyToolkit.TextBox;
  textBox.move(5,5);
  
