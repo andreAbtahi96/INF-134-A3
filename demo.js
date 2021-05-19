@@ -178,6 +178,7 @@ toggleSwitch.toggleOn(function(e){
 
 toggleSwitch.toggleOff(function(e){
 	console.log("Toggle is OFF!");
+
 	
 })
 
